@@ -1,8 +1,20 @@
-//
-// Created by barka on 23/08/2025.
-//
+#pragma once
 
-#ifndef MESH_H
-#define MESH_H
+#include <glad/glad.h>
 
-#endif //MESH_H
+
+class Mesh {
+    public:
+    Mesh();
+    ~Mesh();
+
+    void CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices);
+    void DrawMesh();
+    void ClearMesh();
+
+    void CreateObjects();
+
+    private:
+    GLuint VAO, VBO, IBO;
+    GLsizei indexCount;
+};

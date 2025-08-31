@@ -14,7 +14,13 @@ add_executable(GameEngine main.cpp
         include/Loop.h
         src/Loop.cpp
         src/Transformer.cpp
-        include/Transformer.h)
+        include/Transformer.h
+        include/Camera.h
+        src/Camera.cpp
+        include/Mesh.h
+        src/Mesh.cpp
+        include/Shader.h
+        src/Shader.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

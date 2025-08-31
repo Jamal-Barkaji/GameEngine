@@ -6,6 +6,6 @@
 
 class Loop {
 public:
-    void run(Window& window, Renderer& renderer, Transformer& transformer);
+    void run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList);
 };
 

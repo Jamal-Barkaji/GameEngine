@@ -1,7 +1,7 @@
-#include <Loop.h>
+#include "Loop.h"
 
 
-void Loop::run(Window& window, Renderer& renderer, Transformer& transformer) {
+void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList) {
     bool quit = false;
     SDL_Event e;
 
@@ -18,8 +18,8 @@ void Loop::run(Window& window, Renderer& renderer, Transformer& transformer) {
         //Transforming
         transformer.transform();
         //Rendering
-        renderer.Render(transformer);
+        renderer.RenderMesh(transformer, camera, shader, meshList);
 
-        SDL_GL_SwapWindow(window.getSDLWindow());
+        window.swapBuffers();
     }
 }

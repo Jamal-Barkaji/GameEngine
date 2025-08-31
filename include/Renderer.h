@@ -1,9 +1,12 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <SDL.h>
-#include <string.h>
-#include <Transformer.h>
+#include <iostream>
+#include <vector>
+#include "Transformer.h"
+#include "Camera.h"
+#include "Mesh.h"
+#include "Shader.h"
 
 
 class Renderer {
@@ -11,15 +14,8 @@ public:
     Renderer();
     ~Renderer();
 
-    void CreateTriangle();
-    void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
-    void CompileShaders();
-    void Render(Transformer& transformer);
+    void RenderMesh(Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList);
 
-private:
-    GLuint VAO, VBO, shader;
-    GLint uniformModel;
-    static const char* vShader;
-    static const char* fShader;
+    private:
 
 };

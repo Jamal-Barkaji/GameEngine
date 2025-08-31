@@ -21,7 +21,7 @@ bool Window::init() {
     }
     else {
         //Create window
-        gWindow = SDL_CreateWindow( "SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,  SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,  SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
         if( gWindow == nullptr ) {
             std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
             success = false;
@@ -45,4 +45,16 @@ void Window::close() {
 
 SDL_Window* Window::getSDLWindow() const {
     return gWindow;
+}
+
+int Window::getScreenWidth() {
+    return screenWidth;
+}
+
+int Window::getScreenHeight() {
+    return screenHeight;
+}
+
+void Window::swapBuffers() {
+    SDL_GL_SwapWindow(gWindow);
 }

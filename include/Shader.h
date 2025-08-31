@@ -1,8 +1,32 @@
-//
-// Created by barka on 27/08/2025.
-//
+#pragma once
 
-#ifndef SHADER_H
-#define SHADER_H
+#include <glad/glad.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 
-#endif //SHADER_H
+class Shader {
+    public:
+    Shader();
+    ~Shader();
+
+    void CreateFromString(const char* vertexCode, const char* fragmentCode);
+    void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
+
+    static std::string ReadFile(const char* fileLocation);
+
+    GLuint GetProjectLocation();
+    GLuint GetModelLocation();
+
+    void UseShader();
+    void ClearShader();
+
+    private:
+    GLuint shaderID, uniformProjection;
+    GLint uniformModel;
+    static std::string vShader;
+    static std::string fShader;
+
+    void CompileShader(const char* vertexCode, const char* fragmentCode);
+    void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+};

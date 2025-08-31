@@ -1,4 +1,4 @@
-#include <Transformer.h>
+#include "Transformer.h"
 
 
 void Transformer::transform() {
@@ -13,11 +13,11 @@ void Transformer::transform() {
         direction = !direction;
     }
 
-    currAngle += 0.1f;
+    currAngle += 0.5f;
     if (currAngle >= 360.0f) {
         currAngle -= 360.0f;
     }
-
+/**
     if (sizeDirection) {
         currSize += 0.001f;
     }
@@ -28,14 +28,16 @@ void Transformer::transform() {
     if (currSize >= maxSize || currSize <= minSize) {
         sizeDirection = !sizeDirection;
     }
+    **/
 }
 
 glm::mat4 Transformer::getModelMatrix() const {
     glm::mat4 model(1.0f);
 
-    model = glm::translate(model, glm::vec3(triOffSet, triOffSet, 0.0f));
-    model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::translate(model, glm::vec3(triOffSet, triOffSet, -2.5f));
+    model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(currSize, currSize, 1.0f));
+    
 
     return model;
 }

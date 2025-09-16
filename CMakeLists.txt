@@ -20,7 +20,9 @@ add_executable(GameEngine main.cpp
         include/Mesh.h
         src/Mesh.cpp
         include/Shader.h
-        src/Shader.cpp)
+        src/Shader.cpp
+        include/Input.h
+        src/Input.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

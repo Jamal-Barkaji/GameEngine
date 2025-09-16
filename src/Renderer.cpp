@@ -29,6 +29,7 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
     glm::mat4 projection = camera.getProjection();
     glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader.GetProjectLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(shader.GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 
         for (Mesh* mesh : meshList) {
             mesh->DrawMesh();

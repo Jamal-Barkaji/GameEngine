@@ -34,8 +34,8 @@ void Transformer::transform() {
 glm::mat4 Transformer::getModelMatrix() const {
     glm::mat4 model(1.0f);
 
-    model = glm::translate(model, glm::vec3(triOffSet, triOffSet, -2.5f));
-    model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
+    //model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(currSize, currSize, 1.0f));
     
 

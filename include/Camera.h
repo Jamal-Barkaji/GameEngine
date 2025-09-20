@@ -15,11 +15,15 @@ class Camera {
 
         glm::mat4 calculateViewMatrix();
 
+
+        void MouseControl(float xChange, float yChange);
+
         void update();
-        void MoveCameraForwards();
-        void MoveCameraBackwards();
-        void MoveCameraLeft();
-        void MoveCameraRight();
+        void MoveCameraForwards(float deltaTime);
+        void MoveCameraBackwards(float deltaTime);
+        void MoveCameraLeft(float deltaTime);
+        void MoveCameraRight(float deltaTime);
+
     private:
         float fovy, aspect, zNear, zFar;
         glm::mat4 projection;

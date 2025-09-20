@@ -7,50 +7,40 @@ void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Cam
         bool quit = false;
         SDL_Event e;
 
-        while (!quit) {
-                while (SDL_PollEvent(&e)) {
-                        if (e.type == SDL_QUIT) {
-                                quit = true;
-                        }
-                        switch( e.type ) {
-                            case SDL_KEYDOWN:
-                                switch( e.key.keysym.sym ) {
-                                    case SDLK_ESCAPE:
-                                        quit = true;
-                                        break;
-                                    case SDLK_LEFT:
-                                        printf("left");
-                                        break;
-                                    case SDLK_RIGHT:
-                                        printf("right");
-                                        break;
-                                    case SDLK_UP:
-                                        printf("up");
-                                        break;
-                                    case SDLK_DOWN:
-                                        printf("down");
-                                        break;
-                                    case SDLK_w:
-                                        camera.MoveCameraForwards();
-                                        break;
-                                    case SDLK_s:
-                                        camera.MoveCameraBackwards();
-                                        break;
-                                    case SDLK_a:
-                                        camera.MoveCameraLeft();
-                                        break;
-                                    case SDLK_d:
-                                        camera.MoveCameraRight();
-                                        break;
-                                    default:
-                                        break;
-                                        // TODO: handle keyboard/mouse/etc.
-                                }
-                        }
-                }
-            Input::HandleMouse(window, e);
+        SDL_SetRelativeMouseMode(SDL_TRUE);
 
-            camera.update();
+        while (!quit) {
+            GLfloat currentTime = SDL_GetPerformanceCounter();
+            deltaTime = (currentTime - lastTime) / (GLfloat)SDL_GetPerformanceFrequency();
+            lastTime = currentTime;
+
+                while (SDL_PollEvent(&e)) {
+                    if (e.type == SDL_QUIT) {
+                        quit = true;
+                    }
+                    if ( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                    }
+
+                    if (e.type == SDL_MOUSEMOTION) {
+                        camera.MouseControl(e.motion.xrel, e.motion.yrel);
+                    }
+                }
+                const Uint8* keyStates = SDL_GetKeyboardState(nullptr);
+                if (keyStates[SDL_SCANCODE_W]) {
+                    camera.MoveCameraForwards(deltaTime);
+                }
+                if (keyStates[SDL_SCANCODE_S]) {
+                    camera.MoveCameraBackwards(deltaTime);
+                }
+                if (keyStates[SDL_SCANCODE_A]) {
+                    camera.MoveCameraLeft(deltaTime);
+                }
+                if (keyStates[SDL_SCANCODE_D]) {
+                    camera.MoveCameraRight(deltaTime);
+                }
+            // TODO: Remember to compartmentalise input logic in Input class later
+
 
             //Transforming
             transformer.transform();

@@ -7,5 +7,8 @@
 class Loop {
 public:
     void run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList);
+
+    GLfloat deltaTime = 0.0f;
+    GLfloat lastTime = 0.0f;
 };
 

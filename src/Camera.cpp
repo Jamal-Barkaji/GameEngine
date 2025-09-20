@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include <iostream>
+
 
 Camera::Camera(Window& window, glm::vec3 startPosition, glm::vec3 startUp, float startYaw, float startPitch, float startMoveSpeed, float startTurnSpeed) {
     fovy = 45.0;
@@ -26,15 +26,24 @@ glm::mat4 Camera::getProjection() const {
     return projection;
 }
 
+void Camera::MouseControl(float xChange, float yChange) {
+    xChange *= turnSpeed;
+    yChange *= turnSpeed;
+
+    yaw += xChange;
+    pitch -= yChange;
+
+    if (pitch > 89.0f) {
+        pitch = 89.0f;
+    }
+    if (pitch < -89.0f) {
+        pitch = -89.0f;
+    }
+
+    update();
+}
+
 void Camera::update() {
-    std::cout << "Camera pos: "
-          << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z
-          << " looking at: "
-          << (cameraPos + cameraFront).x << ", "
-          << (cameraPos + cameraFront).y << ", "
-          << (cameraPos + cameraFront).z << std::endl;
-
-
     cameraFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront.y = sin(glm::radians(pitch));
     cameraFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -44,17 +53,17 @@ void Camera::update() {
     cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }
 
-    void Camera::MoveCameraForwards() {
-        cameraPos += cameraFront * movementSpeed;
+    void Camera::MoveCameraForwards(float deltaTime) {
+        cameraPos += cameraFront * (movementSpeed * deltaTime);
     }
-    void Camera::MoveCameraBackwards() {
-        cameraPos -= cameraFront * movementSpeed;
+    void Camera::MoveCameraBackwards(float deltaTime) {
+        cameraPos -= cameraFront * (movementSpeed * deltaTime);
     }
-    void Camera::MoveCameraLeft() {
-        cameraPos -= cameraRight * movementSpeed;
+    void Camera::MoveCameraLeft(float deltaTime) {
+        cameraPos -= cameraRight * (movementSpeed * deltaTime);
     }
-    void Camera::MoveCameraRight() {
-        cameraPos += cameraRight * movementSpeed;
+    void Camera::MoveCameraRight(float deltaTime) {
+        cameraPos += cameraRight * (movementSpeed * deltaTime);
     }
 
 glm::mat4 Camera::calculateViewMatrix() {

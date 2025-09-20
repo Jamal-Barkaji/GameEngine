@@ -55,7 +55,7 @@ void Input::HandleKeys(Window& window, SDL_Event& e) {
 void Input::KeyDown(Window& window, SDL_Keycode key) {
 
 }
-*/
+
 
 void Input::HandleMouse(Window& window, SDL_Event& e) {
     SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -66,3 +66,4 @@ void Input::HandleMouse(Window& window, SDL_Event& e) {
                   << ", y: " << e.motion.y << '\n';
     }
 }
+*/

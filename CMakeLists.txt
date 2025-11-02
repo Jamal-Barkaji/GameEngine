@@ -39,4 +39,3 @@ target_link_libraries(GameEngine PRIVATE
 )
 
 target_include_directories(GameEngine PRIVATE ${CMAKE_SOURCE_DIR}/include)
-include_directories(${PROJECT_SOURCE_DIR}/src)

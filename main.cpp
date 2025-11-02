@@ -1,9 +1,12 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "Loop.h"
+#include "Texture.h"
 
 
 std::vector<Mesh*> meshList;
+
+Texture brickTexture;
 
 int main(int argc, char* argv[]) {
     Window window;
@@ -21,20 +24,24 @@ int main(int argc, char* argv[]) {
     };
 
     GLfloat vertices[] = {
-        -1.0f, -1.0f, 0.0f,
-        0.0f, -1.0f, 1.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f,  1.0f, 0.0f,
+    //   x       y     z         u      v
+        -1.0f, -1.0f, 0.0f,     0.0f,   0.0f,
+        0.0f, -1.0f, 1.0f,      0.5f,   0.0f,
+        1.0f, -1.0f, 0.0f,      1.0f,   0.0,
+        0.0f,  1.0f, 0.0f,      0.5f,   1.0f
     };
 
     Mesh obj1;
-    obj1.CreateMesh(vertices, indices, 12, 12);
+    obj1.CreateMesh(vertices, indices, 20, 12);
     meshList.push_back(&obj1);
 
     Mesh obj2;
-    obj2.CreateMesh(vertices, indices, 12, 12);
+    obj2.CreateMesh(vertices, indices, 20, 12);
     meshList.push_back(&obj2);
 
+    brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/factory_brick_diff_4k.png");
+    brickTexture.loadTexture();
+    brickTexture.useTexture();
 
     Loop loop;
     loop.run(window, renderer, transformer, camera, shader, meshList);

@@ -1,5 +1,8 @@
 #include "Texture.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 
 Texture::Texture() {
     textureID = 0;
@@ -22,7 +25,7 @@ Texture::~Texture() {
 }
 
 void Texture::loadTexture() {
-    unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0);
+    unsigned char* texData = stbi_load(fileLocation.c_str(), &width, &height, &bitDepth, 0);
     if (!texData) {
         std::cout << "Failed to find: " << fileLocation << std::endl;
         return;

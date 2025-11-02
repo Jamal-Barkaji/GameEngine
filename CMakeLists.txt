@@ -22,7 +22,9 @@ add_executable(GameEngine main.cpp
         include/Shader.h
         src/Shader.cpp
         include/Input.h
-        src/Input.cpp)
+        src/Input.cpp
+        include/Texture.h
+        src/Texture.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
@@ -37,3 +39,4 @@ target_link_libraries(GameEngine PRIVATE
 )
 
 target_include_directories(GameEngine PRIVATE ${CMAKE_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src)

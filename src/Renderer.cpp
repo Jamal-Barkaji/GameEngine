@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "Light.h"
+
 
 Renderer::Renderer() {
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
@@ -24,12 +26,16 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
     shader.UseShader();
 
-
+    // TODO: Encapsulate shader logic
     glm::mat4 model = transformer.getModelMatrix();
     glm::mat4 projection = camera.getProjection();
     glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader.GetProjectLocation(), 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix4fv(shader.GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+
+    // TODO: Encapsulate light logic
+    Light mainLight = Light(1.0f, 0.0f, 0.0f, 0.2f);
+    mainLight.useLight(shader.getAmbientIntensityLocation(), shader.getAmbientColourLocation());
 
         for (Mesh* mesh : meshList) {
             mesh->DrawMesh();

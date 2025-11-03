@@ -24,7 +24,9 @@ add_executable(GameEngine main.cpp
         include/Input.h
         src/Input.cpp
         include/Texture.h
-        src/Texture.cpp)
+        src/Texture.cpp
+        include/Light.h
+        src/Light.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

@@ -34,8 +34,11 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
     glUniformMatrix4fv(shader.GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 
     // TODO: Encapsulate light logic
-    Light mainLight = Light(1.0f, 0.0f, 0.0f, 0.2f);
-    mainLight.useLight(shader.getAmbientIntensityLocation(), shader.getAmbientColourLocation());
+    Light mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,
+                            2.0f, -1.0f, -2.0f, 1.0f);
+
+    mainLight.useLight(shader.getAmbientIntensityLocation(), shader.getAmbientColourLocation(),
+                        shader.getDiffuseIntesityLocation(), shader.getDirectionLocation());
 
         for (Mesh* mesh : meshList) {
             mesh->DrawMesh();

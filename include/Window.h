@@ -21,8 +21,8 @@ public:
     // void resize(screen_width, screen_height);
 
 private:
-    int screenWidth = 640;
-    int screenHeight = 480;
+    int screenWidth = 1366;
+    int screenHeight = 768;
 
     SDL_Window* gWindow = nullptr;
 };

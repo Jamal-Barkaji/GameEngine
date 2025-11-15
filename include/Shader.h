@@ -22,13 +22,17 @@ class Shader {
         GLuint getAmbientColourLocation();
         GLuint getDiffuseIntesityLocation();
         GLuint getDirectionLocation();
+        GLuint getSpecularIntensityLocation();
+        GLuint getShininessLocation();
+        GLuint getEyePositionLocation();
 
         void UseShader();
         void ClearShader();
 
     private:
-        GLuint shaderID, uniformProjection, uniformView,
-            uniformAmbientIntensity, uniformAmbientColour, uniformDiffuseIntensity, uniformDirection;
+        GLuint shaderID, uniformProjection, uniformView, uniformEyePosition,
+            uniformAmbientIntensity, uniformAmbientColour, uniformDiffuseIntensity, uniformDirection,
+            uniformSpecularIntensity, uniformShininess;
 
         GLint uniformModel;
         static std::string vShader;

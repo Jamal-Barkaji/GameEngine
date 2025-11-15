@@ -43,6 +43,10 @@ void Camera::MouseControl(float xChange, float yChange) {
     update();
 }
 
+glm::vec3 Camera::getCameraPosition() {
+    return cameraPos;
+}
+
 void Camera::update() {
     cameraFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront.y = sin(glm::radians(pitch));

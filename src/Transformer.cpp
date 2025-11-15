@@ -36,7 +36,7 @@ glm::mat4 Transformer::getModelMatrix() const {
 
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
     //model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(currSize, currSize, 1.0f));
+    //model = glm::scale(model, glm::vec3(currSize, currSize, 1.0f));
     
 
     return model;

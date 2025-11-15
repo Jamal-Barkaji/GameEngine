@@ -9,8 +9,9 @@ public:
     Light(float red, float green, float blue, float aIntensity,
         float xDir, float yDir, float zDir, float dIntensity);
 
-    void useLight(float ambientIntensityLocation, float ambientColourLocation,
-                    float diffuseIntensityLocation, float directionLocation);
+    void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
+                    unsigned int diffuseIntensityLocation, unsigned int directionLocation,
+                    unsigned int specularIntensityLocation, unsigned int shininessLocation);
 
     ~Light();
 

@@ -28,7 +28,12 @@ add_executable(GameEngine main.cpp
         include/Light.h
         src/Light.cpp
         include/Material.h
-        src/Material.cpp)
+        src/Material.cpp
+        include/DirectionalLight.h
+        src/DirectionalLight.cpp
+        include/PointLight.h
+        src/PointLight.cpp
+        include/CommonValues.h)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

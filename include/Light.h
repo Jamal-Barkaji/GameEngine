@@ -6,19 +6,15 @@
 class Light {
 public:
     Light();
-    Light(float red, float green, float blue, float aIntensity,
-        float xDir, float yDir, float zDir, float dIntensity);
+    Light(float red, float green, float blue,
+            float aIntensity, float dIntensity);
 
-    void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
-                    unsigned int diffuseIntensityLocation, unsigned int directionLocation,
-                    unsigned int specularIntensityLocation, unsigned int shininessLocation);
+    //virtual void useLight(float ambientIntensityLocation, float ambientColourLocation);
 
-    ~Light();
+    virtual ~Light();
 
-private:
+protected:
     glm::vec3 colour;
     float ambientIntensity;
-
-    glm::vec3 direction;
     float diffuseIntensity;
 };

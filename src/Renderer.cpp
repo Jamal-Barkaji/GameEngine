@@ -1,6 +1,8 @@
 #include "Renderer.h"
 
-#include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "CommonValues.h"
 #include "Material.h"
 
 
@@ -40,11 +42,30 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
 
     // TODO: Encapsulate light logic
-    Light mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,
-                            2.0f, -1.0f, -2.0f, 0.3f);
+    DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+                                                     0.1f, 0.3f,
+                                                        0.0f, 0.0f, -1.0f);
 
-    mainLight.useLight(shader.getAmbientIntensityLocation(), shader.getAmbientColourLocation(),
-                        shader.getDiffuseIntesityLocation(), shader.getDirectionLocation(), shader.getSpecularIntensityLocation(), shader.getShininessLocation());
+
+
+    PointLight pointLights[MAX_POINT_LIGHTS];
+
+    unsigned int pointLightCount = 0;
+    pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
+                                0.1f, 1.0f,
+                                -4.0f, 0.0f, 0.0f,
+                                0.3f, 0.2f, 0.1f);
+    pointLightCount++;
+
+    pointLights[1] = PointLight(0.0f, 0.0f, 1.0f,
+                                0.1f, 0.5f,
+                                4.0f, 2.0f, 0.0f,
+                                0.3f, 0.1f, 0.1f);
+    pointLightCount++;
+
+    shader.setDirectionalLight(&directionalMainLight);
+    shader.setPointLights(pointLights, pointLightCount);
+
 
     Material shinyMaterial = Material(1.0f, 32);
     Material dullMaterial = Material(0.3f, 4);

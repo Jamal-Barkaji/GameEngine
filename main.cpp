@@ -61,6 +61,19 @@ int main(int argc, char* argv[]) {
         0.0f,  1.0f, 0.0f,      0.5f,   1.0f,       0.0f,   0.0f,   0.0f
     };
 
+    unsigned int floorIndices[] = {
+        0, 2, 1,
+        1, 2, 3
+    };
+
+    GLfloat floorVertices[] = {
+        //   x       y     z         u      v           nx      ny      nz
+            -10.0f, 0.0f, -10.0f,    0.0f,  0.0f,       0.0f,  -1.0f,   0.0f,
+            10.0f, 0.0f, -10.0f,     10.0f, 0.0f,       0.0f,  -1.0f,   0.0f,
+            -10.0f, 0.0f, 10.0f,     0.0f,  10.f,       0.0f,  -1.0f,   0.0f,
+            10.0f, 0.0f, 10.f,       10.f,  10.0f,      0.0f,  -1.0f,   0.0f
+    };
+
     calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
     Mesh obj1;
@@ -70,6 +83,10 @@ int main(int argc, char* argv[]) {
     Mesh obj2;
     obj2.CreateMesh(vertices, indices, 32, 12);
     meshList.push_back(&obj2);
+
+    Mesh obj3;
+    obj3.CreateMesh(floorVertices, floorIndices, 32, 6);
+    meshList.push_back(&obj3);
 
     brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/factory_brick_diff_4k.png");
     brickTexture.loadTexture();

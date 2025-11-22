@@ -5,6 +5,11 @@
 #include <fstream>
 #include <string>
 
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "CommonValues.h"
+
+
 class Shader {
     public:
         Shader();
@@ -20,21 +25,47 @@ class Shader {
         GLuint GetViewLocation();
         GLuint getAmbientIntensityLocation();
         GLuint getAmbientColourLocation();
-        GLuint getDiffuseIntesityLocation();
+        GLuint getDiffuseIntensityLocation();
         GLuint getDirectionLocation();
         GLuint getSpecularIntensityLocation();
         GLuint getShininessLocation();
         GLuint getEyePositionLocation();
 
+        void setDirectionalLight(DirectionalLight* dLight);
+        void setPointLights(PointLight* pLight, unsigned int lightCount);
+
         void UseShader();
         void ClearShader();
 
     private:
+        int pointLightCount;
+
         GLuint shaderID, uniformProjection, uniformView, uniformEyePosition,
-            uniformAmbientIntensity, uniformAmbientColour, uniformDiffuseIntensity, uniformDirection,
             uniformSpecularIntensity, uniformShininess;
 
         GLint uniformModel;
+
+        struct {
+            GLuint uniformColour;
+            GLuint uniformAmbientIntensity;
+            GLuint uniformDiffuseIntensity;
+
+            GLuint uniformDirection;
+        } uniformDirectionalLight;
+
+    GLuint uniformPointLightCount;
+
+    struct {
+        GLuint uniformColour;
+        GLuint uniformAmbientIntensity;
+        GLuint uniformDiffuseIntensity;
+
+        GLuint uniformPosition;
+        GLuint uniformConstant;
+        GLuint uniformLinear;
+        GLuint uniformExponent;
+    } uniformPointLight[MAX_POINT_LIGHTS];
+
         static std::string vShader;
         static std::string fShader;
 

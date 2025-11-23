@@ -12,6 +12,12 @@ Renderer::Renderer() {
         return;
     }
 
+    //TODO: Move this texture logic somewhere more appropriate
+    brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/factory_brick_diff_4k.png");
+    brickTexture.loadTexture();
+    concreteTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/painted_concrete_02_diff_4k.png");
+    concreteTexture.loadTexture();
+
     glEnable(GL_DEPTH_TEST);
 
    // CreateObjects();
@@ -42,9 +48,9 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
 
     // TODO: Encapsulate light logic
-    DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-                                                     0.1f, 0.3f,
-                                                        0.0f, 0.0f, -1.0f);
+    //DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+      //                                               0.1f, 0.3f,
+        //                                                0.0f, 0.0f, -1.0f);
 
 
 
@@ -63,17 +69,33 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
                                 0.3f, 0.1f, 0.1f);
     pointLightCount++;
 
-    shader.setDirectionalLight(&directionalMainLight);
+    //shader.setDirectionalLight(&directionalMainLight);
     shader.setPointLights(pointLights, pointLightCount);
 
+    //TODO: Remember to move this
+    brickTexture.useTexture();
 
-    Material shinyMaterial = Material(1.0f, 32);
-    Material dullMaterial = Material(0.3f, 4);
-    shinyMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
+    // TODO: Encapsulate material logic
+    Material shinyMaterial = Material(3.0f, 100);
+    Material dullMaterial = Material(0.5f, 10);
+    dullMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
 
-        for (Mesh* mesh : meshList) {
-            mesh->DrawMesh();
+
+    // TODO: Encapsulate logic for cycling through multiple models
+    for (size_t i = 0; i < meshList.size(); i++) {
+
+        // Floor
+        if (i == 2) {
+            concreteTexture.useTexture();
+            shinyMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(0.0f, -1.0f, -2.5f));
+            model = glm::scale(model, glm::vec3(10.0f, 1.0f, 10.0f));
         }
+
+        glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
+        meshList[i]->DrawMesh();
+    }
 
     glUseProgram(0);
 }

@@ -7,7 +7,6 @@
 
 std::vector<Mesh*> meshList;
 
-Texture brickTexture;
 
 //TODO: Move this utility method out of main
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
@@ -87,10 +86,6 @@ int main(int argc, char* argv[]) {
     Mesh obj3;
     obj3.CreateMesh(floorVertices, floorIndices, 32, 6);
     meshList.push_back(&obj3);
-
-    brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/factory_brick_diff_4k.png");
-    brickTexture.loadTexture();
-    brickTexture.useTexture();
 
     Loop loop;
     loop.run(window, renderer, transformer, camera, shader, meshList);

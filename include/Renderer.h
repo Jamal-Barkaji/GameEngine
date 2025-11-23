@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Texture.h"
 
 
 class Renderer {
@@ -17,5 +18,7 @@ public:
     void RenderMesh(Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList);
 
     private:
-
+    //TODO: Move textures to a texture manager class later
+    Texture brickTexture;
+    Texture concreteTexture;
 };

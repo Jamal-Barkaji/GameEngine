@@ -33,7 +33,9 @@ add_executable(GameEngine main.cpp
         src/DirectionalLight.cpp
         include/PointLight.h
         src/PointLight.cpp
-        include/CommonValues.h)
+        include/CommonValues.h
+        include/SpotLight.h
+        src/SpotLight.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

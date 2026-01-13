@@ -2,6 +2,7 @@
 
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 #include "CommonValues.h"
 #include "Material.h"
 
@@ -48,29 +49,40 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
 
     // TODO: Encapsulate light logic
-    //DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-      //                                               0.1f, 0.3f,
-        //                                                0.0f, 0.0f, -1.0f);
+    DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+                                                    0.1f, 0.3f,
+                                                       0.0f, 0.0f, -1.0f);
 
 
 
     PointLight pointLights[MAX_POINT_LIGHTS];
+    SpotLight spotLights[MAX_SPOT_LIGHTS];
 
     unsigned int pointLightCount = 0;
     pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
-                                0.1f, 1.0f,
+                                0.7f, 0.1f,
                                 -4.0f, 0.0f, 0.0f,
                                 0.3f, 0.2f, 0.1f);
     pointLightCount++;
 
     pointLights[1] = PointLight(0.0f, 0.0f, 1.0f,
-                                0.1f, 0.5f,
+                                0.5f, 0.1f,
                                 4.0f, 2.0f, 0.0f,
                                 0.3f, 0.1f, 0.1f);
     pointLightCount++;
 
-    //shader.setDirectionalLight(&directionalMainLight);
+    unsigned int spotLightCount = 0;
+    spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+                                0.2f, 1.0f,
+                                0.0f, 3.0f, 4.0f,
+                                1.0f, 0.0f, 0.0f,
+                                0.0f, -1.0f, 0.0f,
+                                20.0f);
+    spotLightCount++;
+
+    shader.setDirectionalLight(&directionalMainLight);
     shader.setPointLights(pointLights, pointLightCount);
+    shader.setSpotLights(spotLights, spotLightCount);
 
     //TODO: Remember to move this
     brickTexture.useTexture();

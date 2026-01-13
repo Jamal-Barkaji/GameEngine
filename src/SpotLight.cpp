@@ -42,3 +42,8 @@ void SpotLight::useLight(unsigned int ambientIntensityLocation, unsigned int amb
     glUniform3f(directionLocation, direction.x, direction.y, direction.z);
     glUniform1f(edgeLocation, procEdge);
 }
+
+void SpotLight::setFlash(glm::vec3 pos, glm::vec3 dir) {
+    position = pos;
+    direction = dir;
+}

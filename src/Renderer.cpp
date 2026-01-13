@@ -49,9 +49,9 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
 
     // TODO: Encapsulate light logic
-    DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-                                                    0.1f, 0.3f,
-                                                       0.0f, 0.0f, -1.0f);
+    // DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+    //                                                 0.1f, 0.3f,
+    //                                                    0.0f, 0.0f, -1.0f);
 
 
 
@@ -62,13 +62,13 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
     pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
                                 0.7f, 0.1f,
                                 -4.0f, 0.0f, 0.0f,
-                                0.3f, 0.2f, 0.1f);
+                                0.2f, 0.2f, 0.1f);
     pointLightCount++;
 
     pointLights[1] = PointLight(0.0f, 0.0f, 1.0f,
                                 0.5f, 0.1f,
                                 4.0f, 2.0f, 0.0f,
-                                0.3f, 0.1f, 0.1f);
+                                0.1f, 0.2f, 0.1f);
     pointLightCount++;
 
     unsigned int spotLightCount = 0;
@@ -80,7 +80,11 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
                                 20.0f);
     spotLightCount++;
 
-    shader.setDirectionalLight(&directionalMainLight);
+    glm::vec3 lowerLight = camera.getCameraPosition();
+    lowerLight.y -= 0.3f;
+    spotLights[0].setFlash(lowerLight, camera.getCameraDirection());
+
+    //shader.setDirectionalLight(&directionalMainLight);
     shader.setPointLights(pointLights, pointLightCount);
     shader.setSpotLights(spotLights, spotLightCount);
 

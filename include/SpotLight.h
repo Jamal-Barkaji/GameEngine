@@ -19,6 +19,8 @@ public:
                     unsigned int constantLocation, unsigned int linearLocation, unsigned int exponentLocation,
                     unsigned int directionLocation, unsigned int edgeLocation);
 
+    void setFlash(glm::vec3 pos, glm::vec3 dir);
+
 private:
     glm::vec3 direction;
 

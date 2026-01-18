@@ -14,10 +14,14 @@ Renderer::Renderer() {
     }
 
     //TODO: Move this texture logic somewhere more appropriate
-    brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/factory_brick_diff_4k.png");
+    brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/factory_brick_diff_4k.png");
     brickTexture.loadTexture();
-    concreteTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/assets/textures/painted_concrete_02_diff_4k.png");
+    concreteTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/painted_concrete_02_diff_4k.png");
     concreteTexture.loadTexture();
+
+    knightModel = Model();
+    knightModel.loadModel("C:/Users/barka/CLionProjects/GameEngine/Assets/Models/SKM_DKM_Full.obj");
+
 
     glEnable(GL_DEPTH_TEST);
 
@@ -88,14 +92,22 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
     shader.setPointLights(pointLights, pointLightCount);
     shader.setSpotLights(spotLights, spotLightCount);
 
-    //TODO: Remember to move this
-    brickTexture.useTexture();
 
     // TODO: Encapsulate material logic
     Material shinyMaterial = Material(3.0f, 100);
     Material dullMaterial = Material(0.5f, 10);
-    dullMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
 
+
+    glm::mat4 knightModel_matrix = glm::mat4(1.0f);
+    knightModel_matrix = glm::translate(knightModel_matrix, glm::vec3(0.0f, 0.0f, 0.0f));
+    knightModel_matrix = glm::scale(knightModel_matrix, glm::vec3(0.01f, 0.01f, 0.01f));
+
+    glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(knightModel_matrix));
+    shinyMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
+    knightModel.renderModel();
+
+    //TODO: Remember to move this
+    brickTexture.useTexture();
 
     // TODO: Encapsulate logic for cycling through multiple models
     for (size_t i = 0; i < meshList.size(); i++) {

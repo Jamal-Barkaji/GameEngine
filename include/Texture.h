@@ -10,7 +10,9 @@ class Texture {
     Texture();
     Texture(std::string fileLoc);
 
-    void loadTexture();
+    bool loadTexture();
+    bool loadTextureA();
+
     void useTexture();
     void clearTexture();
 

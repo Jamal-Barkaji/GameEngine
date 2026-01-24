@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include "glm/gtc/type_ptr.hpp"
+
 std::string Shader::vShader = ReadFile("C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\shader.vert");
 
 std::string Shader::fShader = ReadFile("C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\shader.frag");
@@ -158,6 +160,10 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) {
         snprintf(locBuff, sizeof(locBuff), "spotLights[%d].edge", i);
         uniformSpotLight[i].uniformEdge = glGetUniformLocation(shaderID, locBuff);
     }
+    // Shadows
+    uniformTexture = glGetUniformLocation(shaderID, "theTexture");
+    uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
+    uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
 }
 
 GLuint Shader::GetProjectLocation() {
@@ -239,6 +245,17 @@ void Shader::setSpotLights(SpotLight* sLight, unsigned int lightCount) {
                              uniformSpotLight[i].uniformEdge);
 }
 
+void Shader::setTexture(GLuint textureUnit) {
+    glUniform1i(uniformTexture, textureUnit);
+}
+
+void Shader::setDirectionalShadowMap(GLuint textureUnit) {
+    glUniform1i(uniformDirectionalShadowMap, textureUnit);
+}
+
+void Shader::setDirectionalLightTransform(glm::mat4* lTransform) {
+    glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
+}
 
 void Shader::UseShader() {
     if (shaderID != 0) {

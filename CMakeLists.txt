@@ -38,7 +38,9 @@ add_executable(GameEngine main.cpp
         include/SpotLight.h
         src/SpotLight.cpp
         include/Model.h
-        src/Model.cpp)
+        src/Model.cpp
+        include/ShadowMap.h
+        src/ShadowMap.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

@@ -35,6 +35,9 @@ class Shader {
         void setDirectionalLight(DirectionalLight* dLight);
         void setPointLights(PointLight* pLight, unsigned int lightCount);
         void setSpotLights(SpotLight* sLight, unsigned int lightCount);
+        void setTexture(GLuint textureUnit);
+        void setDirectionalShadowMap(GLuint textureUnit);
+        void setDirectionalLightTransform(glm::mat4* lTransform);
 
         void UseShader();
         void ClearShader();
@@ -44,7 +47,9 @@ class Shader {
         int spotLightCount;
 
         GLuint shaderID, uniformProjection, uniformView, uniformEyePosition,
-            uniformSpecularIntensity, uniformShininess;
+            uniformSpecularIntensity, uniformShininess,
+            uniformTexture,
+            uniformDirectionalLightTransform, uniformDirectionalShadowMap;
 
         GLint uniformModel;
 

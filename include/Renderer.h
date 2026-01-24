@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Model.h"
+#include "DirectionalLight.h"
 
 
 class Renderer {

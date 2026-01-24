@@ -33,6 +33,28 @@ Renderer::~Renderer() {
 
 }
 
+// void directionalShadowMapPass(DirectionalLight* light) {
+//     Shader directionalShadowShader = Shader();
+//     directionalShadowShader.CreateFromFiles("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
+//
+//     directionalShadowShader.UseShader();
+//     glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
+//
+//     light->getShadowMap()->write();
+//     glClear(GL_DEPTH_BUFFER_BIT);
+//
+//     uniformModel = directionalShadowShader.GetModelLocation();
+//     directionalShadowShader.setDirectionalLightTransform(&light->calculateLightTransform());
+//
+//     // Render scene from light's point of view
+//
+//     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//     }
+
+//
+// void renderPass(glm::mat4 projectionMatrix, glm::mat3 viewMatrix) {
+//     // This should probably have something similar to what is currently in RenderMesh() directly
+// }
 
 void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList) {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -53,9 +75,10 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
 
     // TODO: Encapsulate light logic
-    // DirectionalLight directionalMainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-    //                                                 0.1f, 0.3f,
-    //                                                    0.0f, 0.0f, -1.0f);
+    // DirectionalLight directionalMainLight = DirectionalLight(1024, 1024,
+    //                                                         1.0f, 1.0f, 1.0f,
+    //                                                         0.1f, 0.3f,
+    //                                                         0.0f, 0.0f, -1.0f);
 
 
 
@@ -88,7 +111,7 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
     lowerLight.y -= 0.3f;
     spotLights[0].setFlash(lowerLight, camera.getCameraDirection());
 
-    //shader.setDirectionalLight(&directionalMainLight);
+    // shader.setDirectionalLight(&directionalMainLight);
     shader.setPointLights(pointLights, pointLightCount);
     shader.setSpotLights(spotLights, spotLightCount);
 

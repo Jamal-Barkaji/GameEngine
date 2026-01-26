@@ -30,6 +30,7 @@ class Shader {
         GLuint getDirectionLocation();
         GLuint getSpecularIntensityLocation();
         GLuint getShininessLocation();
+        GLuint getAlbedoLocation();
         GLuint getEyePositionLocation();
 
         void setDirectionalLight(DirectionalLight* dLight);

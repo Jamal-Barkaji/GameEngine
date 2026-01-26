@@ -40,7 +40,9 @@ add_executable(GameEngine main.cpp
         include/Model.h
         src/Model.cpp
         include/ShadowMap.h
-        src/ShadowMap.cpp)
+        src/ShadowMap.cpp
+        include/ResourceManager.h
+        src/ResourceManager.cpp)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

@@ -202,6 +202,10 @@ GLuint Shader::getShininessLocation() {
     return uniformShininess;
 }
 
+GLuint Shader::getAlbedoLocation() {
+    return glGetUniformLocation(shaderID, "material.albedoMap");
+}
+
 GLuint Shader::getEyePositionLocation() {
     return uniformEyePosition;
 }

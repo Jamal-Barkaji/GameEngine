@@ -14,10 +14,8 @@ Renderer::Renderer() {
     }
 
     //TODO: Move this texture logic somewhere more appropriate
-    brickTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/factory_brick_diff_4k.png");
-    brickTexture.loadTexture();
-    concreteTexture = Texture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/painted_concrete_02_diff_4k.png");
-    concreteTexture.loadTexture();
+    brickMaterial.albedoMap = resources.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/factory_brick_diff_4k.png");
+    concreteMaterial.albedoMap = resources.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/painted_concrete_02_diff_4k.png");
 
     knightModel = Model();
     knightModel.loadModel("C:/Users/barka/CLionProjects/GameEngine/Assets/Models/SKM_DKM_Full.obj");
@@ -115,30 +113,23 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
     shader.setPointLights(pointLights, pointLightCount);
     shader.setSpotLights(spotLights, spotLightCount);
 
-
-    // TODO: Encapsulate material logic
-    Material shinyMaterial = Material(3.0f, 100);
-    Material dullMaterial = Material(0.5f, 10);
-
-
     glm::mat4 knightModel_matrix = glm::mat4(1.0f);
     knightModel_matrix = glm::translate(knightModel_matrix, glm::vec3(0.0f, 0.0f, 0.0f));
     knightModel_matrix = glm::scale(knightModel_matrix, glm::vec3(0.01f, 0.01f, 0.01f));
 
     glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(knightModel_matrix));
-    shinyMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
+    knightMaterial.bind(shader);
     knightModel.renderModel();
 
     //TODO: Remember to move this
-    brickTexture.useTexture();
+    brickMaterial.bind(shader);
 
     // TODO: Encapsulate logic for cycling through multiple models
     for (size_t i = 0; i < meshList.size(); i++) {
 
         // Floor
         if (i == 2) {
-            concreteTexture.useTexture();
-            shinyMaterial.useMaterial(shader.getSpecularIntensityLocation(), shader.getShininessLocation());
+            concreteMaterial.bind(shader);
             model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(0.0f, -1.0f, -2.5f));
             model = glm::scale(model, glm::vec3(10.0f, 1.0f, 10.0f));

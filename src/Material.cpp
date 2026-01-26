@@ -11,11 +11,26 @@ Material::Material(GLfloat sIntensity, GLfloat shine) {
     shininess = shine;
 }
 
-void Material::useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation) {
-    glUniform1f(specularIntensityLocation, specularIntensity);
-    glUniform1f(shininessLocation, shininess);
-}
-
 Material::~Material() {
 
 }
+
+void Material::bind(Shader& shader) const
+{
+    if (albedoMap)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        albedoMap->useTexture();
+        glUniform1i(shader.getAlbedoLocation(), 0);
+    }
+
+    glUniform1f(shader.getSpecularIntensityLocation(), specularIntensity);
+    glUniform1f(shader.getShininessLocation(), shininess);
+}
+
+// void Material::useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation) {
+//     glUniform1f(specularIntensityLocation, specularIntensity);
+//     glUniform1f(shininessLocation, shininess);
+//
+//     albedoMap->useTexture();
+// }

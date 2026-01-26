@@ -17,8 +17,7 @@ Renderer::Renderer() {
     brickMaterial.albedoMap = resources.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/factory_brick_diff_4k.png");
     concreteMaterial.albedoMap = resources.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/painted_concrete_02_diff_4k.png");
 
-    knightModel = Model();
-    knightModel.loadModel("C:/Users/barka/CLionProjects/GameEngine/Assets/Models/SKM_DKM_Full.obj");
+    knightModel = resources.loadModel("C:/Users/barka/CLionProjects/GameEngine/Assets/Models/SKM_DKM_Full.obj");
 
 
     glEnable(GL_DEPTH_TEST);
@@ -119,7 +118,7 @@ void Renderer::RenderMesh(Transformer& transformer, Camera& camera, Shader& shad
 
     glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(knightModel_matrix));
     knightMaterial.bind(shader);
-    knightModel.renderModel();
+    knightModel->renderModel();
 
     //TODO: Remember to move this
     brickMaterial.bind(shader);

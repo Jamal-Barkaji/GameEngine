@@ -6,9 +6,11 @@
 
 
 class Texture {
-    public:
+public:
     Texture();
     Texture(std::string fileLoc);
+
+    ~Texture();
 
     bool loadTexture();
     bool loadTextureA();
@@ -16,11 +18,7 @@ class Texture {
     void useTexture();
     void clearTexture();
 
-    ~Texture();
-
-    
-
-    private:
+private:
     GLuint textureID;
     int width, height, bitDepth;
 

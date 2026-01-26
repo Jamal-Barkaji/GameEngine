@@ -16,7 +16,7 @@ public:
     Model();
     ~Model();
 
-    void loadModel(const std::string& fileName);
+    bool loadModel(const std::string& fileName);
     void renderModel();
     void clearModel();
 

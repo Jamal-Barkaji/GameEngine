@@ -21,18 +21,19 @@ void Model::renderModel() {
     }
 }
 
-void Model::loadModel(const std::string& fileName) {
+bool Model::loadModel(const std::string& fileName) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
     if (!scene) {
         std::cerr << "Model failed to load: " << fileName << importer.GetErrorString() << std::endl;
-        return;
+        return false;
     }
 
     loadNode(scene->mRootNode, scene);
 
     loadMaterials(scene);
+    return true;
 }
 
 void Model::loadNode(aiNode* node, const aiScene* scene) {

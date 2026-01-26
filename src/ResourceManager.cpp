@@ -25,3 +25,18 @@ std::shared_ptr<Texture> ResourceManager::getDebugTexture() {
     }
     return debugTexture;
 }
+
+
+
+std::shared_ptr<Model> ResourceManager::loadModel(const std::string& path) {
+    if (models.count(path)) return models[path];
+
+    auto model = std::make_shared<Model>();
+    if (!model->loadModel(path)) {
+        std::cerr << "Failed to load model: " << path << "\n";
+        return nullptr;
+    }
+
+    models[path] = model;
+    return model;
+}

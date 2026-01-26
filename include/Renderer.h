@@ -32,5 +32,5 @@ public:
     std::shared_ptr<Texture> concreteTexture;
 
     Material knightMaterial = Material(10.0f, 100);
-    Model knightModel;
+    std::shared_ptr<Model> knightModel;
 };

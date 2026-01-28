@@ -17,7 +17,6 @@ public:
     ~Model();
 
     void renderModel();
-    void clearModel();
 
 private:
     bool loadModel(const std::string& fileName, ResourceManager& resources);

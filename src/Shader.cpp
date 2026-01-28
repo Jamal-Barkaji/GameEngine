@@ -18,6 +18,7 @@ Shader::Shader() {
     pointLightCount = 0;
     spotLightCount = 0;
 
+    //TODO: Use ResourceManager to load shaders from files
     CreateFromString(vShader.c_str(), fShader.c_str());
 }
 

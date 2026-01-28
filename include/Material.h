@@ -15,7 +15,6 @@ public:
 
     void bind(Shader& shader) const;
 
-    // void useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation);
 
     std::shared_ptr<Texture> albedoMap;
 

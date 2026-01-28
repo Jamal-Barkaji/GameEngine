@@ -26,13 +26,22 @@ std::shared_ptr<Texture> ResourceManager::getDebugTexture() {
     return debugTexture;
 }
 
+std::shared_ptr<Shader> ResourceManager::loadShader(const std::string& vert, const std::string& frag) {
+    std::string key = vert + "+" + frag;
+    if (shaders.count(key)) return shaders[key];
 
+    auto shader = std::make_shared<Shader>();
+    shader->CreateFromFiles(vert.c_str(), frag.c_str());
+
+    shaders[key] = shader;
+    return shader;
+}
 
 std::shared_ptr<Model> ResourceManager::loadModel(const std::string& path) {
     if (models.count(path)) return models[path];
 
     auto model = std::make_shared<Model>();
-    if (!model->loadModel(path)) {
+    if (!model->loadModel(path, *this)) {
         std::cerr << "Failed to load model: " << path << "\n";
         return nullptr;
     }

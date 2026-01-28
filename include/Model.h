@@ -16,17 +16,20 @@ public:
     Model();
     ~Model();
 
-    bool loadModel(const std::string& fileName);
     void renderModel();
     void clearModel();
 
 private:
-
+    bool loadModel(const std::string& fileName, ResourceManager& resources);
     void loadNode(aiNode* node, const aiScene* scene);
     void loadMesh(aiMesh* mesh, const aiScene* scene);
-    void loadMaterials(const aiScene* scene);
+    void loadMaterials(const aiScene* scene, ResourceManager& resources);
 
-    std::vector<Mesh*> meshList;
-    std::vector<Texture*> textureList;
+
+    std::vector<std::shared_ptr<Mesh>> meshList;
+    std::vector<std::shared_ptr<Texture>> textureList;
     std::vector<unsigned int> meshToTex; // Which texture corresponds to which mesh
+
+
+    friend class ResourceManager;
 };

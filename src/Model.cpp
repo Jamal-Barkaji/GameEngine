@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "ResourceManager.h"
 
 
 Model::Model() {
@@ -13,6 +14,7 @@ void Model::renderModel() {
     for (size_t i = 0; i < meshList.size(); i++) {
         unsigned int materialIndex = meshToTex[i];
 
+        //TODO: Replace this logic with Material's bind shader method later
         if (materialIndex < textureList.size() && textureList[materialIndex]) {
             textureList[materialIndex]->useTexture();
         }
@@ -21,7 +23,7 @@ void Model::renderModel() {
     }
 }
 
-bool Model::loadModel(const std::string& fileName) {
+bool Model::loadModel(const std::string& fileName, ResourceManager& resources) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
@@ -32,7 +34,7 @@ bool Model::loadModel(const std::string& fileName) {
 
     loadNode(scene->mRootNode, scene);
 
-    loadMaterials(scene);
+    loadMaterials(scene, resources);
     return true;
 }
 
@@ -76,54 +78,38 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
             indices.push_back(face.mIndices[j]);
         }
     }
-    Mesh* newMesh = new Mesh();
-    newMesh->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
+    auto newMesh = std::make_shared<Mesh>();
+    newMesh->CreateMesh(vertices.data(), indices.data(), vertices.size(), indices.size());
     meshList.push_back(newMesh);
     meshToTex.push_back(mesh->mMaterialIndex);
 }
 
-void Model::loadMaterials(const aiScene* scene) {
+void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
     textureList.resize(scene->mNumMaterials);
 
     for (size_t i = 0; i < scene->mNumMaterials; i++) {
         aiMaterial* material = scene->mMaterials[i];
 
-        textureList[i] = nullptr;
+        std::shared_ptr<Texture> tex = nullptr;
+
         if (material->GetTextureCount(aiTextureType_DIFFUSE)) {
             aiString path;
             if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS) {
-                int idx = std::string(path.data).rfind('\\');
-                std::string filename = std::string(path.data).substr(idx + 1);
-
-                std::string texPath = std::string("Assets/Textures/") + filename;
-
-                textureList[i] = new Texture(texPath);
-
-                if (!textureList[i]->loadTexture()) {
-                    std::cerr << "Texture failed to load at path: " << texPath << std::endl;
-                    delete textureList[i];
-                    textureList[i] = nullptr;
+                std::string filename(path.data);
+                size_t idx = filename.find_last_of("\\/");
+                if (idx != std::string::npos) {
+                    filename = filename.substr(idx + 1);
                 }
+
+                std::string texPath = "Assets/Textures/" + filename;
+                tex = resources.loadTexture(texPath);
             }
         }
-        if (!textureList[i]) {
-            textureList[i] = new Texture("C:\\Users\\barka\\CLionProjects\\GameEngine\\Assets\\Textures\\debugTexture.png");
-            textureList[i]->loadTexture();
-        }
-    }
-}
 
-void Model::clearModel() {
-    for (size_t i = 0; i < meshList.size(); i++) {
-        if (meshList[i]) {
-            delete meshList[i];
-            meshList[i] =nullptr;
+        if (!tex) {
+            tex = resources.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/debugTexture.png");
         }
-    }
-    for (size_t i = 0; i < textureList.size(); i++) {
-        if (textureList[i]) {
-            delete textureList[i];
-            textureList[i] =nullptr;
-        }
+
+        textureList[i] = tex;
     }
 }

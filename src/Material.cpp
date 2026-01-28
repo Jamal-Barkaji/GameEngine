@@ -27,10 +27,3 @@ void Material::bind(Shader& shader) const
     glUniform1f(shader.getSpecularIntensityLocation(), specularIntensity);
     glUniform1f(shader.getShininessLocation(), shininess);
 }
-
-// void Material::useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation) {
-//     glUniform1f(specularIntensityLocation, specularIntensity);
-//     glUniform1f(shininessLocation, shininess);
-//
-//     albedoMap->useTexture();
-// }

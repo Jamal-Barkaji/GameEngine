@@ -5,6 +5,8 @@
 #include <iostream>
 
 
+class ResourceManager;
+
 class Texture {
 public:
     Texture();
@@ -12,16 +14,20 @@ public:
 
     ~Texture();
 
-    bool loadTexture();
-    bool loadTextureA();
-
     void useTexture();
     void clearTexture();
 
 private:
+    bool loadTexture();
+    bool loadTextureA();
+
+
     GLuint textureID;
     int width, height, bitDepth;
 
     std::string fileLocation;
+
+
+    friend class ResourceManager;
 };
 

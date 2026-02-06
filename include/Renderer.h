@@ -15,22 +15,12 @@
 #include "ResourceManager.h"
 
 
+class Scene;
+
 class Renderer {
 public:
     Renderer();
     ~Renderer();
 
-    void RenderMesh(Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList);
-
-    private:
-    //TODO: Move textures and models to manager classes later
-    ResourceManager resources;
-
-    Material brickMaterial = Material(1.0f, 32);
-    std::shared_ptr<Texture> brickTexture;
-    Material concreteMaterial = Material(0.5f, 10);
-    std::shared_ptr<Texture> concreteTexture;
-
-    Material knightMaterial = Material(10.0f, 100);
-    std::shared_ptr<Model> knightModel;
+    void renderScene(Scene& scene, Shader& shader, Camera& camera);
 };

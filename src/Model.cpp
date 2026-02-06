@@ -10,16 +10,24 @@ Model::~Model() {
 
 }
 
+void Model::addMesh(const std::shared_ptr<Mesh>& mesh) {
+    meshList.push_back(mesh);
+}
+
 void Model::renderModel() {
     for (size_t i = 0; i < meshList.size(); i++) {
-        unsigned int materialIndex = meshToTex[i];
+        if (i < meshToTex.size()) {
+            unsigned int materialIndex = meshToTex[i];
 
-        //TODO: Replace this logic with Material's bind shader method later
-        if (materialIndex < textureList.size() && textureList[materialIndex]) {
-            textureList[materialIndex]->useTexture();
+            //TODO: Replace this logic with Material's bind shader method later
+            if (materialIndex < textureList.size() && textureList[materialIndex]) {
+                textureList[materialIndex]->useTexture();
+            }
         }
 
-        meshList[i]->DrawMesh();
+        if (meshList[i]) {
+            meshList[i]->DrawMesh();
+        }
     }
 }
 

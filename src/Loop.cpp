@@ -1,9 +1,10 @@
 #include "Loop.h"
 
 #include "Input.h"
+#include "Scene.h"
 
 
-void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Shader& shader, std::vector<Mesh*> meshList) {
+void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Scene& scene, Shader& shader) {
         bool quit = false;
         SDL_Event e;
 
@@ -41,11 +42,18 @@ void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Cam
                 }
             // TODO: Remember to compartmentalise input logic in Input class later
 
+            // TODO: Consider moving this logic to a separate updateScene function in Loop or Scene class later
+            if (!scene.spotLights.empty()) {
+                glm::vec3 lowerLight = camera.getCameraPosition();
+                lowerLight.y -= 0.3f;
+
+                scene.spotLights[0].setFlash(lowerLight, camera.getCameraDirection());
+            }
 
             //Transforming
             transformer.transform();
             //Rendering
-            renderer.RenderMesh(transformer, camera, shader, meshList);
+            renderer.renderScene(scene, shader, camera);
 
             window.swapBuffers();
         }

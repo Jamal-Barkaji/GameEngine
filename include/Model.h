@@ -16,6 +16,8 @@ public:
     Model();
     ~Model();
 
+    void addMesh(const std::shared_ptr<Mesh>& mesh);
+
     void renderModel();
 
 private:

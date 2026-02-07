@@ -43,10 +43,10 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
 
     GLfloat planeVertices[] = {
         //   x       y     z         u      v           nx      ny      nz
-        -10.0f, 0.0f, -10.0f,    0.0f,  0.0f,       0.0f,  -1.0f,   0.0f,
-        10.0f, 0.0f, -10.0f,     10.0f, 0.0f,       0.0f,  -1.0f,   0.0f,
-        -10.0f, 0.0f, 10.0f,     0.0f,  10.f,       0.0f,  -1.0f,   0.0f,
-        10.0f, 0.0f, 10.f,       10.f,  10.0f,      0.0f,  -1.0f,   0.0f
+        -10.0f, 0.0f, -10.0f,    0.0f,  0.0f,       0.0f,   1.0f,   0.0f,
+        10.0f, 0.0f, -10.0f,     10.0f, 0.0f,       0.0f,   1.0f,   0.0f,
+        -10.0f, 0.0f, 10.0f,     0.0f,  10.f,       0.0f,   1.0f,   0.0f,
+        10.0f, 0.0f, 10.f,       10.f,  10.0f,      0.0f,   1.0f,   0.0f
     };
 
     std::shared_ptr<Mesh> planeMesh = std::make_shared<Mesh>();
@@ -61,10 +61,10 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
 
 std::shared_ptr<Model> GeometryGenerator::generatePyramid() {
     unsigned int indices[] = {
-        0, 3, 1,
-        1, 3, 2,
-        2, 3, 0,
-        0, 1, 2
+        0, 1, 3,
+        1, 2, 3,
+        2, 0, 3,
+        0, 2, 1
     };
 
     float vertices[] = {

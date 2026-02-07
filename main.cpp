@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     Scene scene;
 
     Material brickMaterial = Material(1.0f, 32);
-    Material concreteMaterial = Material(0.5f, 10);
+    Material concreteMaterial = Material(2.0f, 40);
     Material knightMaterial = Material(10.0f, 100);
 
     std::shared_ptr<Model> knightModel = resourceManager.loadModel("C:/Users/barka/CLionProjects/GameEngine/Assets/Models/SKM_DKM_Full.obj");

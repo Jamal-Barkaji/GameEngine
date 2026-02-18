@@ -1,12 +1,6 @@
 #include "Shader.h"
 
-#include "glm/gtc/type_ptr.hpp"
-
-std::string Shader::vShader = ReadFile("C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\shader.vert");
-
-std::string Shader::fShader = ReadFile("C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\shader.frag");
-
-///////////////////////////////////////////////////////
+#include <glm/gtc/type_ptr.hpp>
 
 
 Shader::Shader() {
@@ -17,9 +11,6 @@ Shader::Shader() {
 
     pointLightCount = 0;
     spotLightCount = 0;
-
-    //TODO: Use ResourceManager to load shaders from files
-    CreateFromString(vShader.c_str(), fShader.c_str());
 }
 
 Shader::~Shader() {

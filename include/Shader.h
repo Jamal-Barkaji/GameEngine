@@ -97,9 +97,6 @@ private:
         GLuint uniformEdge;
     } uniformSpotLight[MAX_SPOT_LIGHTS];
 
-    static std::string vShader;
-    static std::string fShader;
-
 
     friend class ResourceManager;
 };

@@ -22,5 +22,9 @@ public:
     Renderer();
     ~Renderer();
 
-    void renderScene(Scene& scene, Shader& shader, Camera& camera);
+    void renderFrame(Scene& scene, Camera& camera, Shader& mainShader, Shader& shadowShader);
+
+private:
+    void directionalShadowMapPass(Scene& scene, Shader& shadowShader);
+    void renderPass(Scene& scene, Shader& mainShader, Camera& camera);
 };

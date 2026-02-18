@@ -21,31 +21,16 @@ Renderer::~Renderer() {
 
 }
 
-// void directionalShadowMapPass(DirectionalLight* light) {
-//     Shader directionalShadowShader = Shader();
-//     directionalShadowShader.CreateFromFiles("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
-//
-//     directionalShadowShader.UseShader();
-//     glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
-//
-//     light->getShadowMap()->write();
-//     glClear(GL_DEPTH_BUFFER_BIT);
-//
-//     uniformModel = directionalShadowShader.GetModelLocation();
-//     directionalShadowShader.setDirectionalLightTransform(&light->calculateLightTransform());
-//
-//     // Render scene from light's point of view
-//
-//     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//     }
+void Renderer::renderFrame(Scene& scene, Camera& camera, Shader& mainShader, Shader& shadowShader) {
+    if (!scene.directionalLight.empty()) {
+        directionalShadowMapPass(scene, shadowShader);
+    }
+    renderPass(scene, mainShader, camera);
+}
 
-//
-// void renderPass(glm::mat4 projectionMatrix, glm::mat3 viewMatrix) {
-//     // This should probably have something similar to what is currently in RenderMesh() directly
-// }
-
-
-void Renderer::renderScene(Scene& scene, Shader& shader, Camera& camera) {
+void Renderer::renderPass(Scene& scene, Shader& shader, Camera& camera) {
+    //TODO: Make viewport dynamic based on window size
+    glViewport(0, 0, 1366, 768);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -56,9 +41,16 @@ void Renderer::renderScene(Scene& scene, Shader& shader, Camera& camera) {
     glUniformMatrix4fv(shader.GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
     glUniform3f(shader.getEyePositionLocation(), camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-    // Set Lights from Scene
+    // Lights and Shadows
     if (!scene.directionalLight.empty()) {
-        shader.setDirectionalLight(&scene.directionalLight[0]);
+        DirectionalLight* mainLight = &scene.directionalLight[0];
+        shader.setDirectionalLight(mainLight);
+
+        glm::mat4 lightTransform = mainLight->calculateLightTransform();
+        shader.setDirectionalLightTransform(&lightTransform);
+
+        mainLight->getShadowMap()->read(GL_TEXTURE1);
+        shader.setDirectionalShadowMap(1);
     }
     if (!scene.pointLights.empty()) {
         shader.setPointLights(scene.pointLights.data(), scene.pointLights.size());
@@ -66,7 +58,6 @@ void Renderer::renderScene(Scene& scene, Shader& shader, Camera& camera) {
     if (!scene.spotLights.empty()) {
         shader.setSpotLights(scene.spotLights.data(), scene.spotLights.size());
     }
-
 
     for (const auto& obj : scene.renderObjects) {
         // 1. Set Model Matrix
@@ -82,4 +73,34 @@ void Renderer::renderScene(Scene& scene, Shader& shader, Camera& camera) {
     }
 
     glUseProgram(0);
+}
+
+void Renderer::directionalShadowMapPass(Scene& scene, Shader& shadowShader) {
+    DirectionalLight* light = &scene.directionalLight[0];
+
+    // Bind the specific framebuffer for shadows (off-screen rendering)
+    light->getShadowMap()->write();
+
+    glEnable(GL_DEPTH_TEST);
+    glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
+
+    // Clear DEPTH only
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    shadowShader.UseShader();
+
+    // Calculate Light Matrix (Ortho projection looking down the light dir)
+    glm::mat4 lightTransform = light->calculateLightTransform();
+    shadowShader.setDirectionalLightTransform(&lightTransform);
+
+    // Render Scene Depth from Light's POV
+    for (const auto& obj : scene.renderObjects) {
+        glUniformMatrix4fv(shadowShader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
+
+        if (obj.model) {
+            obj.model->renderModel();
+        }
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

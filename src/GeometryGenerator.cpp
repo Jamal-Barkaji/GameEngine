@@ -50,7 +50,7 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
     };
 
     std::shared_ptr<Mesh> planeMesh = std::make_shared<Mesh>();
-    planeMesh->CreateMesh(planeVertices, planeIndices, 32, 6);
+    planeMesh->createMesh(planeVertices, planeIndices, 32, 6);
 
     std::shared_ptr<Model> planeModel = std::make_shared<Model>();
     planeModel->addMesh(planeMesh);
@@ -78,7 +78,7 @@ std::shared_ptr<Model> GeometryGenerator::generatePyramid() {
     calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
     std::shared_ptr<Mesh> pyramidMesh = std::make_shared<Mesh>();
-    pyramidMesh->CreateMesh(vertices, indices, 32, 12);
+    pyramidMesh->createMesh(vertices, indices, 32, 12);
 
     std::shared_ptr<Model> pyramidModel = std::make_shared<Model>();
     pyramidModel->addMesh(pyramidMesh);

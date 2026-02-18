@@ -18,11 +18,11 @@ public:
     Shader();
     ~Shader();
 
-    static std::string ReadFile(const char* fileLocation);
+    static std::string readFile(const char* fileLocation);
 
-    GLuint GetProjectLocation();
-    GLuint GetModelLocation();
-    GLuint GetViewLocation();
+    GLuint getProjectLocation();
+    GLuint getModelLocation();
+    GLuint getViewLocation();
     GLuint getAmbientIntensityLocation();
     GLuint getAmbientColourLocation();
     GLuint getDiffuseIntensityLocation();
@@ -39,15 +39,15 @@ public:
     void setDirectionalShadowMap(GLuint textureUnit);
     void setDirectionalLightTransform(glm::mat4* lTransform);
 
-    void UseShader();
-    void ClearShader();
+    void useShader();
+    void clearShader();
 
 private:
-    void CreateFromString(const char* vertexCode, const char* fragmentCode);
-    void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
+    void createFromString(const char* vertexCode, const char* fragmentCode);
+    void createFromFiles(const char* vertexLocation, const char* fragmentLocation);
 
-    void CompileShader(const char* vertexCode, const char* fragmentCode);
-    void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+    void compileShader(const char* vertexCode, const char* fragmentCode);
+    void addShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
 
 
     int pointLightCount;

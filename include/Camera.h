@@ -18,13 +18,13 @@ class Camera {
         glm::vec3 getCameraPosition();
         glm::vec3 getCameraDirection();
 
-        void MouseControl(float xChange, float yChange);
+        void mouseControl(float xChange, float yChange);
 
         void update();
-        void MoveCameraForwards(float deltaTime);
-        void MoveCameraBackwards(float deltaTime);
-        void MoveCameraLeft(float deltaTime);
-        void MoveCameraRight(float deltaTime);
+        void moveCameraForwards(float deltaTime);
+        void moveCameraBackwards(float deltaTime);
+        void moveCameraLeft(float deltaTime);
+        void moveCameraRight(float deltaTime);
 
     private:
         float fovy, aspect, zNear, zFar;

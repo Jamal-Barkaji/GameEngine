@@ -34,11 +34,11 @@ void Renderer::renderPass(Scene& scene, Shader& shader, Camera& camera) {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader.UseShader();
+    shader.useShader();
 
     // Global Frame Uniforms
-    glUniformMatrix4fv(shader.GetProjectLocation(), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
-    glUniformMatrix4fv(shader.GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+    glUniformMatrix4fv(shader.getProjectLocation(), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
+    glUniformMatrix4fv(shader.getViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
     glUniform3f(shader.getEyePositionLocation(), camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
     // Lights and Shadows
@@ -61,7 +61,7 @@ void Renderer::renderPass(Scene& scene, Shader& shader, Camera& camera) {
 
     for (const auto& obj : scene.renderObjects) {
         // 1. Set Model Matrix
-        glUniformMatrix4fv(shader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
+        glUniformMatrix4fv(shader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
 
         // 2. Bind Material
         obj.material->bind(shader);
@@ -87,7 +87,7 @@ void Renderer::directionalShadowMapPass(Scene& scene, Shader& shadowShader) {
     // Clear DEPTH only
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    shadowShader.UseShader();
+    shadowShader.useShader();
 
     // Calculate Light Matrix (Ortho projection looking down the light dir)
     glm::mat4 lightTransform = light->calculateLightTransform();
@@ -95,7 +95,7 @@ void Renderer::directionalShadowMapPass(Scene& scene, Shader& shadowShader) {
 
     // Render Scene Depth from Light's POV
     for (const auto& obj : scene.renderObjects) {
-        glUniformMatrix4fv(shadowShader.GetModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
+        glUniformMatrix4fv(shadowShader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
 
         if (obj.model) {
             obj.model->renderModel();

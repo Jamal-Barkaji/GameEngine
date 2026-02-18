@@ -31,7 +31,7 @@ std::shared_ptr<Shader> ResourceManager::loadShader(const std::string& vert, con
     if (shaders.count(key)) return shaders[key];
 
     auto shader = std::make_shared<Shader>();
-    shader->CreateFromFiles(vert.c_str(), frag.c_str());
+    shader->createFromFiles(vert.c_str(), frag.c_str());
 
     shaders[key] = shader;
     return shader;

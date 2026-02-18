@@ -26,7 +26,7 @@ glm::mat4 Camera::getProjection() const {
     return projection;
 }
 
-void Camera::MouseControl(float xChange, float yChange) {
+void Camera::mouseControl(float xChange, float yChange) {
     xChange *= turnSpeed;
     yChange *= turnSpeed;
 
@@ -61,16 +61,16 @@ void Camera::update() {
     cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }
 
-    void Camera::MoveCameraForwards(float deltaTime) {
+    void Camera::moveCameraForwards(float deltaTime) {
         cameraPos += cameraFront * (movementSpeed * deltaTime);
     }
-    void Camera::MoveCameraBackwards(float deltaTime) {
+    void Camera::moveCameraBackwards(float deltaTime) {
         cameraPos -= cameraFront * (movementSpeed * deltaTime);
     }
-    void Camera::MoveCameraLeft(float deltaTime) {
+    void Camera::moveCameraLeft(float deltaTime) {
         cameraPos -= cameraRight * (movementSpeed * deltaTime);
     }
-    void Camera::MoveCameraRight(float deltaTime) {
+    void Camera::moveCameraRight(float deltaTime) {
         cameraPos += cameraRight * (movementSpeed * deltaTime);
     }
 

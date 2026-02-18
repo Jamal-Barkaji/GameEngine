@@ -26,7 +26,7 @@ void Model::renderModel() {
         }
 
         if (meshList[i]) {
-            meshList[i]->DrawMesh();
+            meshList[i]->drawMesh();
         }
     }
 }
@@ -87,7 +87,7 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
         }
     }
     auto newMesh = std::make_shared<Mesh>();
-    newMesh->CreateMesh(vertices.data(), indices.data(), vertices.size(), indices.size());
+    newMesh->createMesh(vertices.data(), indices.data(), vertices.size(), indices.size());
     meshList.push_back(newMesh);
     meshToTex.push_back(mesh->mMaterialIndex);
 }

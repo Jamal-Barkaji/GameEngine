@@ -18,20 +18,20 @@ Shader::~Shader() {
 }
 
 
-void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode) {
-    CompileShader(vertexCode, fragmentCode);
+void Shader::createFromString(const char* vertexCode, const char* fragmentCode) {
+    compileShader(vertexCode, fragmentCode);
 }
 
-void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLocation) {
-    std::string vertexString = ReadFile(vertexLocation);
-    std::string fragmentString = ReadFile(fragmentLocation);
+void Shader::createFromFiles(const char* vertexLocation, const char* fragmentLocation) {
+    std::string vertexString = readFile(vertexLocation);
+    std::string fragmentString = readFile(fragmentLocation);
     const char* vertexCode = vertexString.c_str();
     const char* fragmentCode = fragmentString.c_str();
 
-    CompileShader(vertexCode, fragmentCode);
+    compileShader(vertexCode, fragmentCode);
 }
 
-std::string Shader::ReadFile(const char* fileLocation) {
+std::string Shader::readFile(const char* fileLocation) {
     std::string content;
     std::ifstream fileStream(fileLocation, std::ios::in);
 
@@ -50,7 +50,7 @@ std::string Shader::ReadFile(const char* fileLocation) {
     return content;
 }
 
-void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) {
+void Shader::compileShader(const char* vertexCode, const char* fragmentCode) {
     shaderID = glCreateProgram();
 
     if (!shaderID) {
@@ -58,8 +58,8 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) {
         return;
     }
 
-    AddShader(shaderID, vertexCode, GL_VERTEX_SHADER);
-    AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
+    addShader(shaderID, vertexCode, GL_VERTEX_SHADER);
+    addShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
 
     GLint result = 0;
     GLchar elog[1024] = {0};
@@ -158,15 +158,15 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) {
     uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
 }
 
-GLuint Shader::GetProjectLocation() {
+GLuint Shader::getProjectLocation() {
     return uniformProjection;
 }
 
-GLuint Shader::GetModelLocation() {
+GLuint Shader::getModelLocation() {
     return uniformModel;
 }
 
-GLuint Shader::GetViewLocation() {
+GLuint Shader::getViewLocation() {
     return uniformView;
 }
 
@@ -253,13 +253,13 @@ void Shader::setDirectionalLightTransform(glm::mat4* lTransform) {
     glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
 }
 
-void Shader::UseShader() {
+void Shader::useShader() {
     if (shaderID != 0) {
         glUseProgram(shaderID);
     }
 }
 
-void Shader::ClearShader() {
+void Shader::clearShader() {
     if (shaderID != 0) {
         glDeleteProgram(shaderID);
         shaderID = 0;
@@ -270,7 +270,7 @@ void Shader::ClearShader() {
 }
 
 
-void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) {
+void Shader::addShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) {
     GLuint theShader = glCreateShader(shaderType);
 
     glShaderSource(theShader, 1, &shaderCode, nullptr);

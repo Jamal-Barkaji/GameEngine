@@ -24,21 +24,21 @@ void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Cam
                     }
 
                     if (e.type == SDL_MOUSEMOTION) {
-                        camera.MouseControl(e.motion.xrel, e.motion.yrel);
+                        camera.mouseControl(e.motion.xrel, e.motion.yrel);
                     }
                 }
                 const Uint8* keyStates = SDL_GetKeyboardState(nullptr);
                 if (keyStates[SDL_SCANCODE_W]) {
-                    camera.MoveCameraForwards(deltaTime);
+                    camera.moveCameraForwards(deltaTime);
                 }
                 if (keyStates[SDL_SCANCODE_S]) {
-                    camera.MoveCameraBackwards(deltaTime);
+                    camera.moveCameraBackwards(deltaTime);
                 }
                 if (keyStates[SDL_SCANCODE_A]) {
-                    camera.MoveCameraLeft(deltaTime);
+                    camera.moveCameraLeft(deltaTime);
                 }
                 if (keyStates[SDL_SCANCODE_D]) {
-                    camera.MoveCameraRight(deltaTime);
+                    camera.moveCameraRight(deltaTime);
                 }
             // TODO: Remember to compartmentalise input logic in Input class later
 

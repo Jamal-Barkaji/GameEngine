@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
 
     ResourceManager resourceManager;
 
-    std::shared_ptr<Shader> mainShader = resourceManager.loadShader("C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\shader.vert", "C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\shader.frag");
-    std::shared_ptr<Shader> directionalShadowShader = resourceManager.loadShader("C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\directional_shadow_map.vert", "C:\\Users\\barka\\CLionProjects\\GameEngine\\Shaders\\directional_shadow_map.frag");
+    std::shared_ptr<Shader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
+    std::shared_ptr<Shader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
 
     Scene scene;
 
@@ -24,10 +24,10 @@ int main(int argc, char* argv[]) {
     Material concreteMaterial = Material(2.0f, 40);
     Material knightMaterial = Material(10.0f, 100);
 
-    std::shared_ptr<Model> knightModel = resourceManager.loadModel("C:/Users/barka/CLionProjects/GameEngine/Assets/Models/SKM_DKM_Full.obj");
+    std::shared_ptr<Model> knightModel = resourceManager.loadModel("Assets/Models/SKM_DKM_Full.obj");
 
-    brickMaterial.albedoMap = resourceManager.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/factory_brick_diff_4k.png");
-    concreteMaterial.albedoMap = resourceManager.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/painted_concrete_02_diff_4k.png");
+    brickMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/factory_brick_diff_4k.png");
+    concreteMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/painted_concrete_02_diff_4k.png");
 
     RenderObject knightObject;
     knightObject.model = knightModel;

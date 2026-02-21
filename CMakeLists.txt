@@ -47,7 +47,11 @@ add_executable(GameEngine main.cpp
         src/Scene.cpp
         include/RenderObject.h
         include/GeometryGenerator.h
-        src/GeometryGenerator.cpp)
+        src/GeometryGenerator.cpp
+        include/PhysicsObject.h
+        include/PhysicsSystem.h
+        src/PhysicsSystem.cpp
+)
 
 find_package(glad CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
@@ -64,3 +68,9 @@ target_link_libraries(GameEngine PRIVATE
 )
 
 target_include_directories(GameEngine PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# Copy the Assets folder to the build directory next to the executable
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+
+# Copy the Shaders folder to the build directory next to the executable
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

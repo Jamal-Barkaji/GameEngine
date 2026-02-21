@@ -115,7 +115,7 @@ void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
         }
 
         if (!tex) {
-            tex = resources.loadTexture("C:/Users/barka/CLionProjects/GameEngine/Assets/Textures/debugTexture.png");
+            tex = resources.loadTexture("Assets/Textures/debugTexture.png");
         }
 
         textureList[i] = tex;

@@ -20,6 +20,8 @@ public:
 
     void renderModel();
 
+    AABB getFullModelAABB() const;
+
 private:
     bool loadModel(const std::string& fileName, ResourceManager& resources);
     void loadNode(aiNode* node, const aiScene* scene);

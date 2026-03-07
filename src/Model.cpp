@@ -1,5 +1,7 @@
 #include "Model.h"
 #include "ResourceManager.h"
+#include "glm/common.hpp"
+#include "glm/vec3.hpp"
 
 
 Model::Model() {
@@ -57,37 +59,38 @@ void Model::loadNode(aiNode* node, const aiScene* scene) {
 }
 
 void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
-    std::vector<float> vertices;
+    std::vector<float> vertexData;
     std::vector<unsigned int> indices;
 
     for (size_t i = 0; i < mesh->mNumVertices; i++) {
-        vertices.insert(vertices.end(), {
-            mesh->mVertices[i].x,
-            mesh->mVertices[i].y,
-            mesh->mVertices[i].z
-        });
+        // Grab position for AABB and OpenGL
+        glm::vec3 pos = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+
+        // Add to the float buffer for the GPU
+        vertexData.insert(vertexData.end(), { pos.x, pos.y, pos.z });
+
         if (mesh->mTextureCoords[0]) {
-            vertices.insert(vertices.end(), {
-                mesh->mTextureCoords[0][i].x,
-                mesh->mTextureCoords[0][i].y
-            });
+            vertexData.insert(vertexData.end(), { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y });
         } else {
-            vertices.insert(vertices.end(), {0.0f, 0.0f});
+            vertexData.insert(vertexData.end(), { 0.0f, 0.0f });
         }
-        vertices.insert(vertices.end(), {
-            mesh->mNormals[i].x,
-            mesh->mNormals[i].y,
-            mesh->mNormals[i].z
-        });
+
+        vertexData.insert(vertexData.end(), { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z });
     }
+
     for (size_t i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
         for (size_t j = 0; j < face.mNumIndices; j++) {
             indices.push_back(face.mIndices[j]);
         }
     }
+
     auto newMesh = std::make_shared<Mesh>();
-    newMesh->createMesh(vertices.data(), indices.data(), vertices.size(), indices.size());
+    newMesh->createMesh(vertexData.data(), indices.data(), vertexData.size(), indices.size());
+
+    AABB bounds = AABB::generateFromVertices(vertexData, 8);
+    newMesh->setLocalBounds(bounds.min, bounds.max);
+
     meshList.push_back(newMesh);
     meshToTex.push_back(mesh->mMaterialIndex);
 }
@@ -120,4 +123,14 @@ void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
 
         textureList[i] = tex;
     }
+}
+
+AABB Model::getFullModelAABB() const {
+    auto min = glm::vec3(FLT_MAX);
+    auto max = glm::vec3(-FLT_MAX);
+    for(auto& mesh : meshList) {
+        min = glm::min(min, mesh->getLocalBounds().min);
+        max = glm::max(max, mesh->getLocalBounds().max);
+    }
+    return {min, max};
 }

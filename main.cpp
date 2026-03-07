@@ -1,9 +1,11 @@
+#include "Entity.h"
 #include "GeometryGenerator.h"
 #include "Window.h"
 #include "Renderer.h"
 #include "Loop.h"
 #include "Texture.h"
 #include "Material.h"
+#include "PhysicsSystem.h"
 #include "Scene.h"
 
 
@@ -29,24 +31,29 @@ int main(int argc, char* argv[]) {
     brickMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/factory_brick_diff_4k.png");
     concreteMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/painted_concrete_02_diff_4k.png");
 
-    RenderObject knightObject;
-    knightObject.model = knightModel;
-    knightObject.material = std::make_shared<Material>(knightMaterial);
+    Entity knightObject;
+    knightObject.renderData.model = knightModel;
+    knightObject.physicsData.localAABB = knightModel->getFullModelAABB();
+    knightObject.renderData.material = std::make_shared<Material>(knightMaterial);
+    knightObject.transform = glm::mat4(1.0f);
     knightObject.transform = glm::translate(knightObject.transform, glm::vec3(0.0f, 0.0f, 0.0f));
     knightObject.transform = glm::scale(knightObject.transform, glm::vec3(0.01f, 0.01f, 0.01f));
-    scene.renderObjects.push_back(knightObject);
+    scene.entities.push_back(knightObject);
 
-    RenderObject pyramidObject;
-    pyramidObject.model = GeometryGenerator::generatePyramid();
-    pyramidObject.material = std::make_shared<Material>(brickMaterial);
+    Entity pyramidObject;
+    auto pyramidModel = GeometryGenerator::generatePyramid();
+    pyramidObject.renderData.model = pyramidModel;
+    pyramidObject.physicsData.localAABB = pyramidModel->getFullModelAABB();
+    pyramidObject.renderData.material = std::make_shared<Material>(brickMaterial);
     pyramidObject.transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 4.0f));
-    scene.renderObjects.push_back(pyramidObject);
+    scene.entities.push_back(pyramidObject);
 
-    RenderObject floorObject;
-    floorObject.model = GeometryGenerator::generatePlane();
-    floorObject.material = std::make_shared<Material>(concreteMaterial);
+    Entity floorObject;
+    floorObject.renderData.model = GeometryGenerator::generatePlane();
+    floorObject.physicsData.localAABB = floorObject.renderData.model->getFullModelAABB();
+    floorObject.renderData.material = std::make_shared<Material>(concreteMaterial);
     floorObject.transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-    scene.renderObjects.push_back(floorObject);
+    scene.entities.push_back(floorObject);
 
     DirectionalLight directionalMainLight = DirectionalLight(2048, 2048,
                                                             1.0f, 1.0f, 1.0f,
@@ -78,7 +85,9 @@ int main(int argc, char* argv[]) {
     // s1.setFlash(lowerLight, camera.getCameraDirection());
     scene.spotLights.push_back(s1);
 
+    PhysicsSystem physics;
+
     Loop loop;
-    loop.run(window, renderer, transformer, camera, scene, *mainShader, *directionalShadowShader);
+    loop.run(window, renderer, transformer, camera, scene, *mainShader, *directionalShadowShader, physics);
     return 0;
 }

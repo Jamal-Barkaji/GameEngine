@@ -51,6 +51,7 @@ add_executable(GameEngine main.cpp
         include/PhysicsObject.h
         include/PhysicsSystem.h
         src/PhysicsSystem.cpp
+        include/Entity.h
 )
 
 find_package(glad CONFIG REQUIRED)

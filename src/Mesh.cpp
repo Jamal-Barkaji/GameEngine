@@ -66,3 +66,11 @@ void Mesh::clearMesh() {
 
     indexCount = 0;
 }
+
+void Mesh::setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB) {
+    localBound = { minAABB, maxAABB };
+}
+
+AABB Mesh::getLocalBounds() {
+    return localBound;
+}

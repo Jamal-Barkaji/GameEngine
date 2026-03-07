@@ -4,8 +4,11 @@
 
 #include "RenderObject.h"
 #include "DirectionalLight.h"
+#include "Entity.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "PhysicsObject.h"
+
 
 class Camera;
 
@@ -17,6 +20,7 @@ public:
     void clear();
 
     std::vector<RenderObject> renderObjects;
+    std::vector<Entity> entities;
 
     Camera* activeCamera = nullptr;
 

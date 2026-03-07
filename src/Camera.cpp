@@ -26,6 +26,18 @@ glm::mat4 Camera::getProjection() const {
     return projection;
 }
 
+glm::mat4 Camera::calculateViewMatrix() {
+    return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+}
+
+glm::vec3 Camera::getCameraPosition() {
+    return cameraPos;
+}
+
+glm::vec3 Camera::getCameraDirection() {
+    return glm::normalize(cameraFront);
+}
+
 void Camera::mouseControl(float xChange, float yChange) {
     xChange *= turnSpeed;
     yChange *= turnSpeed;
@@ -43,14 +55,6 @@ void Camera::mouseControl(float xChange, float yChange) {
     update();
 }
 
-glm::vec3 Camera::getCameraPosition() {
-    return cameraPos;
-}
-
-glm::vec3 Camera::getCameraDirection() {
-    return glm::normalize(cameraFront);
-}
-
 void Camera::update() {
     cameraFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront.y = sin(glm::radians(pitch));
@@ -61,19 +65,22 @@ void Camera::update() {
     cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }
 
-    void Camera::moveCameraForwards(float deltaTime) {
-        cameraPos += cameraFront * (movementSpeed * deltaTime);
-    }
-    void Camera::moveCameraBackwards(float deltaTime) {
-        cameraPos -= cameraFront * (movementSpeed * deltaTime);
-    }
-    void Camera::moveCameraLeft(float deltaTime) {
-        cameraPos -= cameraRight * (movementSpeed * deltaTime);
-    }
-    void Camera::moveCameraRight(float deltaTime) {
-        cameraPos += cameraRight * (movementSpeed * deltaTime);
-    }
+void Camera::moveCameraForwards(float deltaTime) {
+    cameraPos += cameraFront * (movementSpeed * deltaTime);
+}
+void Camera::moveCameraBackwards(float deltaTime) {
+    cameraPos -= cameraFront * (movementSpeed * deltaTime);
+}
+void Camera::moveCameraLeft(float deltaTime) {
+    cameraPos -= cameraRight * (movementSpeed * deltaTime);
+}
+void Camera::moveCameraRight(float deltaTime) {
+    cameraPos += cameraRight * (movementSpeed * deltaTime);
+}
 
-glm::mat4 Camera::calculateViewMatrix() {
-    return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+AABB Camera::getAABB() const {
+    AABB box;
+    box.min = cameraPos - cameraSize;
+    box.max = cameraPos + cameraSize;
+    return box;
 }

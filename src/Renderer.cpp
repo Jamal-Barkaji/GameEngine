@@ -59,16 +59,16 @@ void Renderer::renderPass(Scene& scene, Shader& shader, Camera& camera) {
         shader.setSpotLights(scene.spotLights.data(), scene.spotLights.size());
     }
 
-    for (const auto& obj : scene.renderObjects) {
+    for (const auto& entity : scene.entities) {
         // 1. Set Model Matrix
-        glUniformMatrix4fv(shader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
+        glUniformMatrix4fv(shader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(entity.transform));
 
         // 2. Bind Material
-        obj.material->bind(shader);
+        entity.renderData.material->bind(shader);
 
         // 3. Draw
-        if (obj.model) {
-            obj.model->renderModel();
+        if (entity.renderData.model) {
+            entity.renderData.model->renderModel();
         }
     }
 

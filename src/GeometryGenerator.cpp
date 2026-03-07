@@ -36,12 +36,12 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 }
 
 std::shared_ptr<Model> GeometryGenerator::generatePlane() {
-    unsigned int planeIndices[] = {
+    std::vector<unsigned int> planeIndices = {
         0, 2, 1,
         1, 2, 3
     };
 
-    GLfloat planeVertices[] = {
+    std::vector<float> planeVertices = {
         //   x       y     z         u      v           nx      ny      nz
         -10.0f, 0.0f, -10.0f,    0.0f,  0.0f,       0.0f,   1.0f,   0.0f,
         10.0f, 0.0f, -10.0f,     10.0f, 0.0f,       0.0f,   1.0f,   0.0f,
@@ -50,7 +50,10 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
     };
 
     std::shared_ptr<Mesh> planeMesh = std::make_shared<Mesh>();
-    planeMesh->createMesh(planeVertices, planeIndices, 32, 6);
+    planeMesh->createMesh(planeVertices.data(), planeIndices.data(), 32, 6);
+
+    AABB bounds = AABB::generateFromVertices(planeVertices, 8);
+    planeMesh->setLocalBounds(bounds.min, bounds.max);
 
     std::shared_ptr<Model> planeModel = std::make_shared<Model>();
     planeModel->addMesh(planeMesh);
@@ -60,25 +63,28 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
 
 
 std::shared_ptr<Model> GeometryGenerator::generatePyramid() {
-    unsigned int indices[] = {
+    std::vector<unsigned int> pyramidIndices = {
         0, 1, 3,
         1, 2, 3,
         2, 0, 3,
         0, 2, 1
     };
 
-    float vertices[] = {
+    std::vector<float> pyramidVertices = {
         //   x       y     z         u      v           nx      ny      nz
         -1.0f, -1.0f, -0.6f,    0.0f,   0.0f,       0.0f,   0.0f,   0.0f,
-        0.0f, -1.0f, 1.0f,      0.5f,   0.0f,       0.0f,   0.0f,   0.0f,
-        1.0f, -1.0f, -0.6f,     1.0f,   0.0,        0.0f,   0.0f,   0.0f,
-        0.0f,  1.0f, 0.0f,      0.5f,   1.0f,       0.0f,   0.0f,   0.0f
+         0.0f, -1.0f,  1.0f,    0.5f,   0.0f,       0.0f,   0.0f,   0.0f,
+         1.0f, -1.0f, -0.6f,    1.0f,   0.0f,       0.0f,   0.0f,   0.0f,
+         0.0f,  1.0f,  0.0f,    0.5f,   1.0f,       0.0f,   0.0f,   0.0f
     };
 
-    calcAverageNormals(indices, 12, vertices, 32, 8, 5);
+    calcAverageNormals(pyramidIndices.data(), pyramidIndices.size(), pyramidVertices.data(), pyramidVertices.size(), 8, 5);
 
     std::shared_ptr<Mesh> pyramidMesh = std::make_shared<Mesh>();
-    pyramidMesh->createMesh(vertices, indices, 32, 12);
+    pyramidMesh->createMesh(pyramidVertices.data(), pyramidIndices.data(), pyramidVertices.size(), pyramidIndices.size());
+
+    AABB bounds = AABB::generateFromVertices(pyramidVertices, 8);
+    pyramidMesh->setLocalBounds(bounds.min, bounds.max);
 
     std::shared_ptr<Model> pyramidModel = std::make_shared<Model>();
     pyramidModel->addMesh(pyramidMesh);

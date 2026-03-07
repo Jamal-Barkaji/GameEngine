@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include "PhysicsObject.h"
+
 
 class Mesh {
     public:
@@ -12,7 +14,12 @@ class Mesh {
         void drawMesh();
         void clearMesh();
 
+        void setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB);
+        AABB getLocalBounds();
+
     private:
         GLuint VAO, VBO, IBO;
         GLsizei indexCount;
+
+        AABB localBound;
 };

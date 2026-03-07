@@ -1,10 +1,11 @@
 #include "Loop.h"
 
 #include "Input.h"
+#include "PhysicsSystem.h"
 #include "Scene.h"
 
 
-void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Scene& scene, Shader& mainShader, Shader& shadowShader) {
+void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Camera& camera, Scene& scene, Shader& mainShader, Shader& shadowShader, PhysicsSystem& physics) {
         bool quit = false;
         SDL_Event e;
 
@@ -41,6 +42,8 @@ void Loop::run(Window& window, Renderer& renderer, Transformer& transformer, Cam
                     camera.moveCameraRight(deltaTime);
                 }
             // TODO: Remember to compartmentalise input logic in Input class later
+
+            physics.step(camera, scene.entities, deltaTime);
 
             // TODO: Consider moving this logic to a separate updateScene function in Loop or Scene class later
             if (!scene.spotLights.empty()) {

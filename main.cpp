@@ -5,7 +5,6 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "Loop.h"
-#include "Texture.h"
 #include "Material.h"
 #include "PhysicsSystem.h"
 #include "Scene.h"
@@ -29,11 +28,10 @@ int main(int argc, char* argv[]) {
     Material concreteMaterial = Material(2.0f, 40);
     Material knightMaterial = Material(10.0f, 100);
 
-    std::shared_ptr<Model> knightModel = resourceManager.loadModel("Assets/Models/SKM_DKM_Full.obj");
-    knightMaterial.albedoMap = resourceManager.getDebugTexture();
-
     brickMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/factory_brick_diff_4k.png");
     concreteMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/painted_concrete_02_diff_4k.png");
+
+    std::shared_ptr<Model> knightModel = resourceManager.loadModel("Assets/Models/SKM_DKM_Full.obj");
 
     Entity knightObject;
     knightObject.renderData.model = knightModel;

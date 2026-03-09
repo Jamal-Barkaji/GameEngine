@@ -1,0 +1,119 @@
+#include "Skybox.h"
+
+#include "stb_image.h"
+
+
+Skybox::Skybox() {
+    // skyboxVAO = 0;
+    // skyboxVBO = 0;
+}
+
+Skybox::Skybox(std::vector<std::string> faceLocations, std::shared_ptr<Shader> shader)
+: skyboxMesh(nullptr), skyboxShader(shader) {
+
+    // Mesh Setup
+    unsigned int skyboxIndices[] = {
+        // Front
+        0, 1, 2,
+        2, 1, 3,
+        // Right
+        2, 3, 5,
+        5, 3, 7,
+        // Back
+        5, 7, 4,
+        4, 7, 6,
+        // Left
+        4, 6, 0,
+        0, 6, 1,
+        // Top
+        4, 0, 5,
+        5, 0, 2,
+        // Bottom
+        1, 6, 3,
+        3, 6, 7
+    };
+
+    float skyboxVertices[] = {
+        -1.0f, 1.0f, -1.0f,     0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, -1.0f,      0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, -1.0f,     0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+
+        -1.0f, 1.0f, 1.0,       0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,       0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 1.0f,      0.0f, 0.0f,     0.0f, 0.0f, 0.0f
+    };
+
+    skyboxMesh = std::make_unique<Mesh>();
+    skyboxMesh->createMesh(skyboxVertices, skyboxIndices, 64, 36);
+
+    // Shader Setup
+    uniformProjection = skyboxShader->getProjectLocation();
+    uniformView = skyboxShader->getViewLocation();
+
+
+    // Texture Setup
+    glGenTextures(1, &skyboxTextureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureID);
+
+    int width, height, bitDepth;
+
+    for (size_t i = 0; i < 6; i++) {
+        unsigned char* texData = stbi_load(faceLocations[i].c_str(), &width, &height, &bitDepth, 0);
+        if (!texData) {
+            std::cout << "Failed to find/load Skybox face: " << faceLocations[i]
+                      << " | STB Reason: " << stbi_failure_reason() << std::endl;
+            return;
+        }
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
+        stbi_image_free(texData);
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+Skybox::~Skybox() {
+    // if (skyboxVAO) {
+    //     glDeleteVertexArrays(1, &skyboxVAO);
+    // }
+    // if (skyboxVBO) {
+    //     glDeleteBuffers(1, &skyboxVBO);
+    // }
+}
+
+void Skybox::drawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
+    if (!skyboxMesh) return;
+
+    viewMatrix = glm::mat4(glm::mat3(viewMatrix));
+
+    glDepthMask(GL_FALSE);
+
+    skyboxShader->useShader();
+
+    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+    glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureID);
+
+    //skyboxShader->validate();
+
+    skyboxMesh->drawMesh();
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    glDepthMask(GL_TRUE);
+}
+
+GLuint Skybox::getProjectionMatrix() {
+    return uniformProjection;
+}
+
+GLuint Skybox::getViewMatrix() {
+    return uniformView;
+}

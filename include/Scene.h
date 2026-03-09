@@ -8,6 +8,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "PhysicsObject.h"
+#include "Skybox.h"
 
 
 class Camera;
@@ -21,6 +22,7 @@ public:
 
     std::vector<RenderObject> renderObjects;
     std::vector<Entity> entities;
+    std::shared_ptr<Skybox> skybox;
 
     Camera* activeCamera = nullptr;
 

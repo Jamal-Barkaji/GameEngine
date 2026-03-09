@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "Entity.h"
 #include "GeometryGenerator.h"
 #include "Window.h"
@@ -7,6 +9,7 @@
 #include "Material.h"
 #include "PhysicsSystem.h"
 #include "Scene.h"
+#include "Skybox.h"
 
 
 int main(int argc, char* argv[]) {
@@ -27,6 +30,7 @@ int main(int argc, char* argv[]) {
     Material knightMaterial = Material(10.0f, 100);
 
     std::shared_ptr<Model> knightModel = resourceManager.loadModel("Assets/Models/SKM_DKM_Full.obj");
+    knightMaterial.albedoMap = resourceManager.getDebugTexture();
 
     brickMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/factory_brick_diff_4k.png");
     concreteMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/painted_concrete_02_diff_4k.png");
@@ -56,9 +60,9 @@ int main(int argc, char* argv[]) {
     scene.entities.push_back(floorObject);
 
     DirectionalLight directionalMainLight = DirectionalLight(2048, 2048,
-                                                            1.0f, 1.0f, 1.0f,
-                                                            0.2f, 0.1f,
-                                                            0.0f, 0.0f, -1.0f);
+                                                            1.0f, 0.53f, 0.3f,
+                                                            0.2f, 0.9f,
+                                                            -10.0f, -12.0f, 18.0f);
 
     scene.directionalLight.push_back(directionalMainLight);
 
@@ -66,13 +70,13 @@ int main(int argc, char* argv[]) {
                                 0.7f, 0.1f,
                                 -4.0f, 0.0f, 0.0f,
                                 0.2f, 0.2f, 0.1f);
-    scene.pointLights.push_back(p1);
+    // scene.pointLights.push_back(p1);
 
     PointLight p2 = PointLight(0.0f, 0.0f, 1.0f,
                                 0.5f, 0.1f,
                                 4.0f, 2.0f, 0.0f,
                                 0.1f, 0.2f, 0.1f);
-    scene.pointLights.push_back(p2);
+    // scene.pointLights.push_back(p2);
 
     SpotLight s1 = SpotLight(1.0f, 1.0f, 1.0f,
                                 0.2f, 1.0f,
@@ -83,7 +87,18 @@ int main(int argc, char* argv[]) {
     // glm::vec3 lowerLight = camera.getCameraPosition();
     // lowerLight.y -= 0.3f;
     // s1.setFlash(lowerLight, camera.getCameraDirection());
-    scene.spotLights.push_back(s1);
+    // scene.spotLights.push_back(s1);
+
+    std::shared_ptr<Shader> skyboxShader = resourceManager.loadShader("Shaders/skybox.vert", "Shaders/skybox.frag");
+    std::vector<std::string> skyboxFaces;
+    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_rt.tga");
+    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_lf.tga");
+    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_up.tga");
+    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_dn.tga");
+    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_bk.tga");
+    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_ft.tga");
+
+    scene.skybox = std::make_shared<Skybox>(skyboxFaces, skyboxShader);
 
     PhysicsSystem physics;
 

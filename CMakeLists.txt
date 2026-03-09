@@ -52,6 +52,9 @@ add_executable(GameEngine main.cpp
         include/PhysicsSystem.h
         src/PhysicsSystem.cpp
         include/Entity.h
+        include/Skybox.h
+        src/Skybox.cpp
+        src/stb_image.cpp
 )
 
 find_package(glad CONFIG REQUIRED)

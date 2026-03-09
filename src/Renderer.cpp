@@ -34,6 +34,13 @@ void Renderer::renderPass(Scene& scene, Shader& shader, Camera& camera) {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+     if (scene.skybox) {
+         glm::mat4 skyView = camera.calculateViewMatrix();
+         skyView = glm::mat4(glm::mat3(skyView));
+
+         scene.skybox->drawSkybox(skyView, camera.getProjection());
+     }
+
     shader.useShader();
 
     // Global Frame Uniforms
@@ -94,11 +101,11 @@ void Renderer::directionalShadowMapPass(Scene& scene, Shader& shadowShader) {
     shadowShader.setDirectionalLightTransform(&lightTransform);
 
     // Render Scene Depth from Light's POV
-    for (const auto& obj : scene.renderObjects) {
+    for (const auto& obj : scene.entities) {
         glUniformMatrix4fv(shadowShader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
 
-        if (obj.model) {
-            obj.model->renderModel();
+        if (obj.renderData.model) {
+            obj.renderData.model->renderModel();
         }
     }
 

@@ -11,7 +11,9 @@ std::shared_ptr<Texture> ResourceManager::loadTexture(const std::string& path) {
     auto tex = std::make_shared<Texture>(path);
     if (!tex->loadTexture()) {
         std::cerr << "Failed to load texture: " << path << "\n";
-        return getDebugTexture();
+
+        textures[path] = getDebugTexture();
+        return textures[path];
     }
 
     textures[path] = tex;

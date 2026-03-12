@@ -9,6 +9,7 @@
 #include "PhysicsSystem.h"
 #include "Scene.h"
 #include "Skybox.h"
+#include "ResourceManager.h"
 
 
 int main(int argc, char* argv[]) {

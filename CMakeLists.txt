@@ -55,6 +55,8 @@ add_executable(GameEngine main.cpp
         include/Skybox.h
         src/Skybox.cpp
         src/stb_image.cpp
+        include/IRenderer.h
+        include/IShader.h
 )
 
 find_package(glad CONFIG REQUIRED)

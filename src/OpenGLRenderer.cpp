@@ -44,10 +44,6 @@ void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
     shader.bindShader();
 
     // Global Frame Uniforms
-    // glUniformMatrix4fv(shader.getProjectLocation(), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
-    // glUniformMatrix4fv(shader.getViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-    // glUniform3f(shader.getEyePositionLocation(), camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
-
     shader.setMat4("projection", camera.getProjection());
     shader.setMat4("view", camera.calculateViewMatrix());
     shader.setVec3("eyePosition", camera.getCameraPosition());
@@ -56,29 +52,41 @@ void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
     if (!scene.directionalLight.empty()) {
         DirectionalLight* mainLight = &scene.directionalLight[0];
 
-        mainLight->useLight(shader);
+        mainLight->useLight(shader, "directionalLight");
 
         shader.setMat4("directionalLightTransform", mainLight->calculateLightTransform());
 
         // mainLight->getShadowMap()->read(GL_TEXTURE1);
         // shader.setInt("directionalShadowMap", 1);
     }
-    // if (!scene.pointLights.empty()) {
-    //     shader.setPointLights(scene.pointLights.data(), scene.pointLights.size());
-    // }
-    // if (!scene.spotLights.empty()) {
-    //     shader.setSpotLights(scene.spotLights.data(), scene.spotLights.size());
-    // }
+    if (!scene.pointLights.empty()) {
+        int pointLightCount = static_cast<int>(scene.pointLights.size());
+        shader.setInt("pointLightCount", pointLightCount);
+        for (int i = 0; i < pointLightCount; i++) {
+            std::string prefix = "pointLights[" + std::to_string(i) + "]";
+            scene.pointLights[i].useLight(shader, prefix);
+        }
+    }
+
+    if (!scene.spotLights.empty()) {
+        int spotLightCount = static_cast<int>(scene.spotLights.size());
+        shader.setInt("spotLightCount", spotLightCount);
+        for (int i = 0; i < spotLightCount; i++) {
+            std::string prefix = "spotLights[" + std::to_string(i) + "]";
+            scene.spotLights[i].useLight(shader, prefix);
+        }
+    }
 
     for (const auto& entity : scene.entities) {
-        // 1. Set Model Matrix
-        // glUniformMatrix4fv(shader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(entity.transform));
+        // Set Model Matrix
         shader.setMat4("model", entity.transform);
 
-        // 2. Bind Material
-        entity.renderData.material->bindMaterial(shader);
+        // Bind Material
+        if (entity.renderData.material) {
+            entity.renderData.material->bindMaterial(shader);
+        }
 
-        // 3. Draw
+        // Draw
         if (entity.renderData.model) {
             entity.renderData.model->renderModel();
         }

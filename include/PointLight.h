@@ -13,11 +13,7 @@ public:
 
     ~PointLight() override;
 
-    // void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
-    //                 unsigned int diffuseIntensityLocation, unsigned int positionLocation,
-    //                 unsigned int constantLocation, unsigned int linearLocation, unsigned int exponentLocation);
-
-    void useLight(IShader& shader) override;
+    void useLight(IShader& shader, const std::string& prefix) override;
 
 protected:
     glm::vec3 position;

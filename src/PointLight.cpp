@@ -1,7 +1,5 @@
 #include "PointLight.h"
 
-#include <glad/glad.h>
-
 
 PointLight::PointLight() : Light() {
     position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -23,27 +21,10 @@ PointLight::PointLight(float red, float green, float blue,
 
 PointLight::~PointLight() = default;
 
-void PointLight::useLight(IShader& shader) {
-    Light::useLight(shader);
-    shader.setVec3("PointLight.position", position);
-    shader.setFloat("PointLight.constant", constant);
-    shader.setFloat("PointLight.linear", linear);
-    shader.setFloat("PointLight.exponent", exponent);
+void PointLight::useLight(IShader& shader, const std::string& prefix) {
+    Light::useLight(shader, prefix + ".base");
+    shader.setVec3(prefix + ".position", position);
+    shader.setFloat(prefix + ".constant", constant);
+    shader.setFloat(prefix + ".linear", linear);
+    shader.setFloat(prefix + ".exponent", exponent);
 }
-
-// void PointLight::useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
-//                           unsigned int diffuseIntensityLocation, unsigned int positionLocation,
-//                           unsigned int constantLocation, unsigned int linearLocation,
-//                           unsigned int exponentLocation) {
-//
-//     glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
-//     glUniform1f(ambientIntensityLocation, ambientIntensity);
-//     glUniform1f(diffuseIntensityLocation, diffuseIntensity);
-//
-//     glUniform3f(positionLocation, position.x, position.y, position.z);
-//
-//
-//     glUniform1f(constantLocation, constant);
-//     glUniform1f(linearLocation, linear);
-//     glUniform1f(exponentLocation, exponent);
-// }

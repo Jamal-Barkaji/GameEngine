@@ -1,4 +1,5 @@
 #pragma once
+
 #include "PointLight.h"
 
 
@@ -14,12 +15,7 @@ public:
 
     ~SpotLight() override;
 
-    // void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
-    //                 unsigned int diffuseIntensityLocation,  unsigned int positionLocation,
-    //                 unsigned int constantLocation, unsigned int linearLocation, unsigned int exponentLocation,
-    //                 unsigned int directionLocation, unsigned int edgeLocation);
-
-    void useLight(IShader& shader) override;
+    void useLight(IShader& shader, const std::string& prefix) override;
 
     void setFlash(glm::vec3 pos, glm::vec3 dir);
 

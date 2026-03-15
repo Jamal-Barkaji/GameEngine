@@ -97,15 +97,13 @@ void Skybox::drawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 
     skyboxShader->bindShader();
 
-    // glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-    // glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
-    skyboxShader->setMat4("uniformProjection", projectionMatrix);
-    skyboxShader->setMat4("uniformView", viewMatrix);
+    skyboxShader->setMat4("projection", projectionMatrix);
+    skyboxShader->setMat4("view", viewMatrix);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureID);
 
+    //TODO: create a validate() function in the shader class to check if the shader is ready to be used before drawing
     //skyboxShader->validate();
 
     skyboxMesh->drawMesh();

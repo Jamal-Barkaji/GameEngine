@@ -1,7 +1,5 @@
 #include "Light.h"
 
-#include <glad/glad.h>
-
 
 Light::Light() {
     colour = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -20,19 +18,14 @@ Light::Light(float shadowWidth, float shadowHeight, float red, float green, floa
 
 Light::~Light() = default;
 
+
 ShadowMap* Light::getShadowMap() {
     return shadowMap;
 }
 
-
-//void Light::useLight(float ambientIntensityLocation, float ambientColourLocation) {
-//    glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
-//    glUniform1f(ambientIntensityLocation, ambientIntensity);
-//}
-
-void Light::useLight(IShader& shader) {
-    shader.setVec3("colour", colour);
-    shader.setFloat("ambientIntensity", ambientIntensity);
-    shader.setFloat("diffuseIntensity", diffuseIntensity);
-    shader.setMat4("lightProj", lightProj);
+void Light::useLight(IShader& shader, const std::string& prefix) {
+    shader.setVec3(prefix + ".colour", colour);
+    shader.setFloat(prefix + ".ambientIntensity", ambientIntensity);
+    shader.setFloat(prefix + ".diffuseIntensity", diffuseIntensity);
+    shader.setMat4(prefix + ".lightProj", lightProj);
 }

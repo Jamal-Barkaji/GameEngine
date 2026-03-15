@@ -21,9 +21,9 @@ void Material::bindMaterial(IShader& shader) const {
         glActiveTexture(GL_TEXTURE0);
         albedoMap->bindTexture();
 
-        shader.setInt("Material.albedoMap", 0);
+        shader.setInt("material.albedoMap", 0);
     }
 
-    shader.setFloat("Material.specularIntensity", specularIntensity);
-    shader.setFloat("Material.shininess", shininess);
+    shader.setFloat("material.specularIntensity", specularIntensity);
+    shader.setFloat("material.shininess", shininess);
 }

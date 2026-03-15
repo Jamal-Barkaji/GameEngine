@@ -18,7 +18,7 @@ public:
 
     ShadowMap* getShadowMap();
 
-    virtual void useLight(IShader& shader) = 0;
+    virtual void useLight(IShader& shader, const std::string& prefix) = 0;
 
 protected:
     glm::vec3 colour;

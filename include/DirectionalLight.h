@@ -14,7 +14,7 @@ public:
 
     ~DirectionalLight() override;
 
-    void useLight(IShader& shader) override;
+    void useLight(IShader& shader, const std::string& prefix) override;
 
     glm::mat4 calculateLightTransform();
 

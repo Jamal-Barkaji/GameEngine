@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "GeometryGenerator.h"
 #include "Window.h"
-#include "Renderer.h"
+#include "OpenGLRenderer.h"
 #include "Loop.h"
 #include "Material.h"
 #include "PhysicsSystem.h"
@@ -14,14 +14,14 @@
 
 int main(int argc, char* argv[]) {
     Window window;
-    Renderer renderer;
+    OpenGLRenderer renderer;
     Transformer transformer;
     Camera camera = Camera(window, glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 5.0f, 0.2f);
 
     ResourceManager resourceManager;
 
-    std::shared_ptr<Shader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
-    std::shared_ptr<Shader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
+    std::shared_ptr<OpenGLShader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
+    std::shared_ptr<OpenGLShader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
 
     Scene scene;
 
@@ -69,13 +69,13 @@ int main(int argc, char* argv[]) {
                                 0.7f, 0.1f,
                                 -4.0f, 0.0f, 0.0f,
                                 0.2f, 0.2f, 0.1f);
-    // scene.pointLights.push_back(p1);
+    scene.pointLights.push_back(p1);
 
     PointLight p2 = PointLight(0.0f, 0.0f, 1.0f,
                                 0.5f, 0.1f,
                                 4.0f, 2.0f, 0.0f,
                                 0.1f, 0.2f, 0.1f);
-    // scene.pointLights.push_back(p2);
+    scene.pointLights.push_back(p2);
 
     SpotLight s1 = SpotLight(1.0f, 1.0f, 1.0f,
                                 0.2f, 1.0f,
@@ -86,9 +86,9 @@ int main(int argc, char* argv[]) {
     // glm::vec3 lowerLight = camera.getCameraPosition();
     // lowerLight.y -= 0.3f;
     // s1.setFlash(lowerLight, camera.getCameraDirection());
-    // scene.spotLights.push_back(s1);
+    scene.spotLights.push_back(s1);
 
-    std::shared_ptr<Shader> skyboxShader = resourceManager.loadShader("Shaders/skybox.vert", "Shaders/skybox.frag");
+    std::shared_ptr<OpenGLShader> skyboxShader = resourceManager.loadShader("Shaders/skybox.vert", "Shaders/skybox.frag");
     std::vector<std::string> skyboxFaces;
     skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_rt.tga");
     skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_lf.tga");

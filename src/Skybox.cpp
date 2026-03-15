@@ -3,13 +3,13 @@
 #include "stb_image.h"
 
 
-Skybox::Skybox() {
+Skybox::Skybox(): skyboxTextureID(0), uniformProjection(0), uniformView(0) {
     // skyboxVAO = 0;
     // skyboxVBO = 0;
 }
 
-Skybox::Skybox(std::vector<std::string> faceLocations, std::shared_ptr<Shader> shader)
-: skyboxMesh(nullptr), skyboxShader(shader) {
+Skybox::Skybox(std::vector<std::string> faceLocations, std::shared_ptr<OpenGLShader> shader)
+    : skyboxMesh(nullptr), skyboxShader(shader), uniformProjection(0), uniformView(0) {
 
     // Mesh Setup
     unsigned int skyboxIndices[] = {
@@ -34,23 +34,23 @@ Skybox::Skybox(std::vector<std::string> faceLocations, std::shared_ptr<Shader> s
     };
 
     float skyboxVertices[] = {
-        -1.0f, 1.0f, -1.0f,     0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, -1.0f,      0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, -1.0f,     0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
-        -1.0f, 1.0f, 1.0,       0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,       0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,     0.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, 1.0f,      0.0f, 0.0f,     0.0f, 0.0f, 0.0f
+        -1.0f, 1.0f, 1.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
     };
 
-    skyboxMesh = std::make_unique<Mesh>();
+    skyboxMesh = std::make_unique<OpenGLMesh>();
     skyboxMesh->createMesh(skyboxVertices, skyboxIndices, 64, 36);
 
-    // Shader Setup
-    uniformProjection = skyboxShader->getProjectLocation();
-    uniformView = skyboxShader->getViewLocation();
+    // OpenGLShader Setup
+    // uniformProjection = skyboxShader->getProjectLocation();
+    // uniformView = skyboxShader->getViewLocation();
 
 
     // Texture Setup
@@ -63,11 +63,12 @@ Skybox::Skybox(std::vector<std::string> faceLocations, std::shared_ptr<Shader> s
         unsigned char* texData = stbi_load(faceLocations[i].c_str(), &width, &height, &bitDepth, 0);
         if (!texData) {
             std::cout << "Failed to find/load Skybox face: " << faceLocations[i]
-                      << " | STB Reason: " << stbi_failure_reason() << std::endl;
+                << " | STB Reason: " << stbi_failure_reason() << std::endl;
             return;
         }
 
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                     texData);
         stbi_image_free(texData);
     }
 
@@ -94,10 +95,13 @@ void Skybox::drawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 
     glDepthMask(GL_FALSE);
 
-    skyboxShader->useShader();
+    skyboxShader->bindShader();
 
-    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-    glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+    // glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+    // glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+
+    skyboxShader->setMat4("uniformProjection", projectionMatrix);
+    skyboxShader->setMat4("uniformView", viewMatrix);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureID);

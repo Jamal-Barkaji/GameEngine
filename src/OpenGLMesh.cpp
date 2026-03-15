@@ -1,18 +1,18 @@
-#include "Mesh.h"
+#include "OpenGLMesh.h"
 
 
-Mesh::Mesh() {
+OpenGLMesh::OpenGLMesh() {
     VAO = 0;
     VBO = 0;
     IBO = 0;
     indexCount = 0;
 }
 
-Mesh::~Mesh() {
-    clearMesh();
+OpenGLMesh::~OpenGLMesh() {
+    OpenGLMesh::clearMesh();
 }
 
-void Mesh::createMesh(float* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices) {
+void OpenGLMesh::createMesh(float* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices) {
     indexCount = numOfIndices;
 
     glGenVertexArrays(1, &VAO);
@@ -39,16 +39,7 @@ void Mesh::createMesh(float* vertices, unsigned int* indices, unsigned int numOf
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Mesh::drawMesh() {
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
-}
-
-void Mesh::clearMesh() {
+void OpenGLMesh::clearMesh() {
     if (IBO != 0) {
         glDeleteBuffers(1, &IBO);
         IBO = 0;
@@ -67,10 +58,19 @@ void Mesh::clearMesh() {
     indexCount = 0;
 }
 
-void Mesh::setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB) {
+void OpenGLMesh::drawMesh() {
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+}
+
+void OpenGLMesh::setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB) {
     localBound = { minAABB, maxAABB };
 }
 
-AABB Mesh::getLocalBounds() {
+AABB OpenGLMesh::getLocalBounds() {
     return localBound;
 }

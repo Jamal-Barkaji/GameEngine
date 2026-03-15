@@ -12,7 +12,7 @@ Model::~Model() {
 
 }
 
-void Model::addMesh(const std::shared_ptr<Mesh>& mesh) {
+void Model::addMesh(const std::shared_ptr<OpenGLMesh>& mesh) {
     meshList.push_back(mesh);
 }
 
@@ -23,7 +23,7 @@ void Model::renderModel() {
 
             //TODO: Replace this logic with Material's bind shader method later
             if (materialIndex < textureList.size() && textureList[materialIndex]) {
-                textureList[materialIndex]->useTexture();
+                textureList[materialIndex]->bindTexture();
             }
         }
 
@@ -85,7 +85,7 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
         }
     }
 
-    auto newMesh = std::make_shared<Mesh>();
+    auto newMesh = std::make_shared<OpenGLMesh>();
     newMesh->createMesh(vertexData.data(), indices.data(), vertexData.size(), indices.size());
 
     AABB bounds = AABB::generateFromVertices(vertexData, 8);
@@ -101,7 +101,7 @@ void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
     for (size_t i = 0; i < scene->mNumMaterials; i++) {
         aiMaterial* material = scene->mMaterials[i];
 
-        std::shared_ptr<Texture> tex = nullptr;
+        std::shared_ptr<OpenGLTexture> tex = nullptr;
 
         if (material->GetTextureCount(aiTextureType_DIFFUSE)) {
             aiString path;

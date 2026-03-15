@@ -1,6 +1,6 @@
 #include "GeometryGenerator.h"
 
-#include "Mesh.h"
+#include "OpenGLMesh.h"
 #include "Model.h"
 
 #include <glm/vec3.hpp>
@@ -49,7 +49,7 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
         10.0f, 0.0f, 10.f,       10.f,  10.0f,      0.0f,   1.0f,   0.0f
     };
 
-    std::shared_ptr<Mesh> planeMesh = std::make_shared<Mesh>();
+    std::shared_ptr<OpenGLMesh> planeMesh = std::make_shared<OpenGLMesh>();
     planeMesh->createMesh(planeVertices.data(), planeIndices.data(), 32, 6);
 
     AABB bounds = AABB::generateFromVertices(planeVertices, 8);
@@ -80,7 +80,7 @@ std::shared_ptr<Model> GeometryGenerator::generatePyramid() {
 
     calcAverageNormals(pyramidIndices.data(), pyramidIndices.size(), pyramidVertices.data(), pyramidVertices.size(), 8, 5);
 
-    std::shared_ptr<Mesh> pyramidMesh = std::make_shared<Mesh>();
+    std::shared_ptr<OpenGLMesh> pyramidMesh = std::make_shared<OpenGLMesh>();
     pyramidMesh->createMesh(pyramidVertices.data(), pyramidIndices.data(), pyramidVertices.size(), pyramidIndices.size());
 
     AABB bounds = AABB::generateFromVertices(pyramidVertices, 8);

@@ -1,9 +1,9 @@
-#include "Shader.h"
+#include "OpenGLShader.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
 
-Shader::Shader() {
+OpenGLShader::OpenGLShader() {
     shaderID = 0;
     uniformProjection = 0;
     uniformModel = 0;
@@ -13,16 +13,40 @@ Shader::Shader() {
     spotLightCount = 0;
 }
 
-Shader::~Shader() {
+OpenGLShader::~OpenGLShader() {
 
 }
 
+void OpenGLShader::setInt(const std::string& name, int value) {
+    glUniform1i(getUniformLocation(name), value);
+}
 
-void Shader::createFromString(const char* vertexCode, const char* fragmentCode) {
+void OpenGLShader::setFloat(const std::string& name, float value) {
+    glUniform1f(getUniformLocation(name), value);
+}
+
+void OpenGLShader::setVec3(const std::string& name, const glm::vec3& value) {
+    glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
+}
+
+void OpenGLShader::setMat4(const std::string& name, const glm::mat4& value) {
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+int OpenGLShader::getUniformLocation(const std::string& name) {
+    if (locationCache.find(name) != locationCache.end())
+        return locationCache[name];
+
+    int location = glGetUniformLocation(shaderID, name.c_str());
+    locationCache[name] = location;
+    return location;
+}
+
+void OpenGLShader::createFromString(const char* vertexCode, const char* fragmentCode) {
     compileShader(vertexCode, fragmentCode);
 }
 
-void Shader::createFromFiles(const char* vertexLocation, const char* fragmentLocation) {
+void OpenGLShader::createFromFiles(const char* vertexLocation, const char* fragmentLocation) {
     std::string vertexString = readFile(vertexLocation);
     std::string fragmentString = readFile(fragmentLocation);
     const char* vertexCode = vertexString.c_str();
@@ -31,7 +55,7 @@ void Shader::createFromFiles(const char* vertexLocation, const char* fragmentLoc
     compileShader(vertexCode, fragmentCode);
 }
 
-std::string Shader::readFile(const char* fileLocation) {
+std::string OpenGLShader::readFile(const char* fileLocation) {
     std::string content;
     std::ifstream fileStream(fileLocation, std::ios::in);
 
@@ -50,7 +74,7 @@ std::string Shader::readFile(const char* fileLocation) {
     return content;
 }
 
-void Shader::compileShader(const char* vertexCode, const char* fragmentCode) {
+void OpenGLShader::compileShader(const char* vertexCode, const char* fragmentCode) {
     shaderID = glCreateProgram();
 
     if (!shaderID) {
@@ -158,119 +182,119 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode) {
     uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
 }
 
-GLuint Shader::getProjectLocation() {
-    return uniformProjection;
-}
+// GLuint OpenGLShader::getProjectLocation() {
+//     return uniformProjection;
+// }
+//
+// GLuint OpenGLShader::getModelLocation() {
+//     return uniformModel;
+// }
+//
+// GLuint OpenGLShader::getViewLocation() {
+//     return uniformView;
+// }
+//
+// GLuint OpenGLShader::getAmbientColourLocation() {
+//     return uniformDirectionalLight.uniformColour;
+// }
+//
+// GLuint OpenGLShader::getAmbientIntensityLocation() {
+//     return uniformDirectionalLight.uniformAmbientIntensity;
+// }
+//
+// GLuint OpenGLShader::getDiffuseIntensityLocation() {
+//     return uniformDirectionalLight.uniformDiffuseIntensity;
+// }
+//
+// GLuint OpenGLShader::getDirectionLocation() {
+//     return uniformDirectionalLight.uniformDirection;
+// }
+//
+// GLuint OpenGLShader::getSpecularIntensityLocation() {
+//     return uniformSpecularIntensity;
+// }
+//
+// GLuint OpenGLShader::getShininessLocation() {
+//     return uniformShininess;
+// }
+//
+// GLuint OpenGLShader::getAlbedoLocation() {
+//     return glGetUniformLocation(shaderID, "material.albedoMap");
+// }
+//
+// GLuint OpenGLShader::getEyePositionLocation() {
+//     return uniformEyePosition;
+// }
 
-GLuint Shader::getModelLocation() {
-    return uniformModel;
-}
+// void OpenGLShader::setDirectionalLight(DirectionalLight* dLight) {
+//     dLight->useLight(uniformDirectionalLight.uniformAmbientIntensity,
+//                      uniformDirectionalLight.uniformColour,
+//                      uniformDirectionalLight.uniformDiffuseIntensity,
+//                      uniformDirectionalLight.uniformDirection);
+// }
 
-GLuint Shader::getViewLocation() {
-    return uniformView;
-}
+// void OpenGLShader::setPointLights(PointLight* pLight, unsigned int lightCount) {
+//     if (lightCount > MAX_POINT_LIGHTS) lightCount = MAX_POINT_LIGHTS;
+//
+//     glUniform1i(uniformPointLightCount, lightCount);
+//
+//     for (size_t i = 0; i < lightCount; i++)
+//         pLight[i].useLight(uniformPointLight[i].uniformAmbientIntensity,
+//                              uniformPointLight[i].uniformColour,
+//                              uniformPointLight[i].uniformDiffuseIntensity,
+//                              uniformPointLight[i].uniformPosition,
+//                              uniformPointLight[i].uniformConstant,
+//                              uniformPointLight[i].uniformLinear,
+//                              uniformPointLight[i].uniformExponent);
+// }
 
-GLuint Shader::getAmbientColourLocation() {
-    return uniformDirectionalLight.uniformColour;
-}
+// void OpenGLShader::setSpotLights(SpotLight* sLight, unsigned int lightCount) {
+//     if (lightCount > MAX_SPOT_LIGHTS) lightCount = MAX_SPOT_LIGHTS;
+//
+//     glUniform1i(uniformSpotLightCount, lightCount);
+//
+//     for (size_t i = 0; i < lightCount; i++)
+//         sLight[i].useLight(uniformSpotLight[i].uniformAmbientIntensity,
+//                              uniformSpotLight[i].uniformColour,
+//                              uniformSpotLight[i].uniformDiffuseIntensity,
+//                              uniformSpotLight[i].uniformPosition,
+//                              uniformSpotLight[i].uniformConstant,
+//                              uniformSpotLight[i].uniformLinear,
+//                              uniformSpotLight[i].uniformExponent,
+//                              uniformSpotLight[i].uniformDirection,
+//                              uniformSpotLight[i].uniformEdge);
+// }
 
-GLuint Shader::getAmbientIntensityLocation() {
-    return uniformDirectionalLight.uniformAmbientIntensity;
-}
+// void OpenGLShader::setTexture(GLuint textureUnit) {
+//     glUniform1i(uniformTexture, textureUnit);
+// }
+//
+// void OpenGLShader::setDirectionalShadowMap(GLuint textureUnit) {
+//     glUniform1i(uniformDirectionalShadowMap, textureUnit);
+// }
+//
+// void OpenGLShader::setDirectionalLightTransform(glm::mat4* lTransform) {
+//     glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
+// }
 
-GLuint Shader::getDiffuseIntensityLocation() {
-    return uniformDirectionalLight.uniformDiffuseIntensity;
-}
-
-GLuint Shader::getDirectionLocation() {
-    return uniformDirectionalLight.uniformDirection;
-}
-
-GLuint Shader::getSpecularIntensityLocation() {
-    return uniformSpecularIntensity;
-}
-
-GLuint Shader::getShininessLocation() {
-    return uniformShininess;
-}
-
-GLuint Shader::getAlbedoLocation() {
-    return glGetUniformLocation(shaderID, "material.albedoMap");
-}
-
-GLuint Shader::getEyePositionLocation() {
-    return uniformEyePosition;
-}
-
-void Shader::setDirectionalLight(DirectionalLight* dLight) {
-    dLight->useLight(uniformDirectionalLight.uniformAmbientIntensity,
-                     uniformDirectionalLight.uniformColour,
-                     uniformDirectionalLight.uniformDiffuseIntensity,
-                     uniformDirectionalLight.uniformDirection);
-}
-
-void Shader::setPointLights(PointLight* pLight, unsigned int lightCount) {
-    if (lightCount > MAX_POINT_LIGHTS) lightCount = MAX_POINT_LIGHTS;
-
-    glUniform1i(uniformPointLightCount, lightCount);
-
-    for (size_t i = 0; i < lightCount; i++)
-        pLight[i].useLight(uniformPointLight[i].uniformAmbientIntensity,
-                             uniformPointLight[i].uniformColour,
-                             uniformPointLight[i].uniformDiffuseIntensity,
-                             uniformPointLight[i].uniformPosition,
-                             uniformPointLight[i].uniformConstant,
-                             uniformPointLight[i].uniformLinear,
-                             uniformPointLight[i].uniformExponent);
-}
-
-void Shader::setSpotLights(SpotLight* sLight, unsigned int lightCount) {
-    if (lightCount > MAX_SPOT_LIGHTS) lightCount = MAX_SPOT_LIGHTS;
-
-    glUniform1i(uniformSpotLightCount, lightCount);
-
-    for (size_t i = 0; i < lightCount; i++)
-        sLight[i].useLight(uniformSpotLight[i].uniformAmbientIntensity,
-                             uniformSpotLight[i].uniformColour,
-                             uniformSpotLight[i].uniformDiffuseIntensity,
-                             uniformSpotLight[i].uniformPosition,
-                             uniformSpotLight[i].uniformConstant,
-                             uniformSpotLight[i].uniformLinear,
-                             uniformSpotLight[i].uniformExponent,
-                             uniformSpotLight[i].uniformDirection,
-                             uniformSpotLight[i].uniformEdge);
-}
-
-void Shader::setTexture(GLuint textureUnit) {
-    glUniform1i(uniformTexture, textureUnit);
-}
-
-void Shader::setDirectionalShadowMap(GLuint textureUnit) {
-    glUniform1i(uniformDirectionalShadowMap, textureUnit);
-}
-
-void Shader::setDirectionalLightTransform(glm::mat4* lTransform) {
-    glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
-}
-
-void Shader::useShader() {
+void OpenGLShader::bindShader() const {
     if (shaderID != 0) {
         glUseProgram(shaderID);
     }
 }
 
-void Shader::clearShader() {
+void OpenGLShader::unbindShader() const {
     if (shaderID != 0) {
         glDeleteProgram(shaderID);
-        shaderID = 0;
+    //     shaderID = 0;
     }
-
-    uniformModel = 0;
-    uniformProjection = 0;
+    //
+    // uniformModel = 0;
+    // uniformProjection = 0;
 }
 
 
-void Shader::addShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) {
+void OpenGLShader::addShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) {
     GLuint theShader = glCreateShader(shaderType);
 
     glShaderSource(theShader, 1, &shaderCode, nullptr);

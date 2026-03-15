@@ -12,17 +12,19 @@ public:
                     float xDir, float yDir, float zDir,
                     float edg);
 
-    ~SpotLight();
+    ~SpotLight() override;
 
-    void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
-                    unsigned int diffuseIntensityLocation,  unsigned int positionLocation,
-                    unsigned int constantLocation, unsigned int linearLocation, unsigned int exponentLocation,
-                    unsigned int directionLocation, unsigned int edgeLocation);
+    // void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
+    //                 unsigned int diffuseIntensityLocation,  unsigned int positionLocation,
+    //                 unsigned int constantLocation, unsigned int linearLocation, unsigned int exponentLocation,
+    //                 unsigned int directionLocation, unsigned int edgeLocation);
+
+    void useLight(IShader& shader) override;
 
     void setFlash(glm::vec3 pos, glm::vec3 dir);
 
 private:
     glm::vec3 direction;
 
-    float edge, procEdge;;
+    float edge, procEdge;
 };

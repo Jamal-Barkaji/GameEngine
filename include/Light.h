@@ -3,21 +3,22 @@
 #include <glm/glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
+#include "IShader.h"
 #include "ShadowMap.h"
 
 
 class Light {
 public:
     Light();
-    Light(GLfloat shadowWidth, GLfloat shadowHeight,
-            GLfloat red, GLfloat green, GLfloat blue,
-            GLfloat aIntensity, GLfloat dIntensity);
+    Light(float shadowWidth, float shadowHeight,
+            float red, float green, float blue,
+            float aIntensity, float dIntensity);
 
     virtual ~Light();
 
     ShadowMap* getShadowMap();
 
-    //virtual void useLight(float ambientIntensityLocation, float ambientColourLocation);
+    virtual void useLight(IShader& shader) = 0;
 
 protected:
     glm::vec3 colour;

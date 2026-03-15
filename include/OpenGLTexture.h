@@ -4,18 +4,20 @@
 #include <glad/glad.h>
 #include <iostream>
 
+#include "ITexture.h"
+
 
 class ResourceManager;
 
-class Texture {
+class OpenGLTexture : public ITexture {
 public:
-    Texture();
-    Texture(std::string fileLoc);
+    OpenGLTexture();
+    OpenGLTexture(std::string fileLoc);
 
-    ~Texture();
+    ~OpenGLTexture() override;
 
-    void useTexture();
-    void clearTexture();
+    void bindTexture() override;
+    void unbindTexture();
 
 private:
     bool loadTexture();

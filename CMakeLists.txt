@@ -10,22 +10,22 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 add_executable(GameEngine main.cpp
         src/Window.cpp
         include/Window.h
-        include/Renderer.h
-        src/Renderer.cpp
+        include/OpenGLRenderer.h
+        src/OpenGLRenderer.cpp
         include/Loop.h
         src/Loop.cpp
         src/Transformer.cpp
         include/Transformer.h
         include/Camera.h
         src/Camera.cpp
-        include/Mesh.h
-        src/Mesh.cpp
-        include/Shader.h
-        src/Shader.cpp
+        include/OpenGLMesh.h
+        src/OpenGLMesh.cpp
+        include/OpenGLShader.h
+        src/OpenGLShader.cpp
         include/Input.h
         src/Input.cpp
-        include/Texture.h
-        src/Texture.cpp
+        include/OpenGLTexture.h
+        src/OpenGLTexture.cpp
         include/Light.h
         src/Light.cpp
         include/Material.h
@@ -57,6 +57,8 @@ add_executable(GameEngine main.cpp
         src/stb_image.cpp
         include/IRenderer.h
         include/IShader.h
+        include/ITexture.h
+        include/IMesh.h
 )
 
 find_package(glad CONFIG REQUIRED)

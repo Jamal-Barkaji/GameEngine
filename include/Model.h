@@ -7,8 +7,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "Mesh.h"
-#include "Texture.h"
+#include "OpenGLMesh.h"
+#include "OpenGLTexture.h"
 
 
 class Model {
@@ -16,7 +16,7 @@ public:
     Model();
     ~Model();
 
-    void addMesh(const std::shared_ptr<Mesh>& mesh);
+    void addMesh(const std::shared_ptr<OpenGLMesh>& mesh);
 
     void renderModel();
 
@@ -29,8 +29,8 @@ private:
     void loadMaterials(const aiScene* scene, ResourceManager& resources);
 
 
-    std::vector<std::shared_ptr<Mesh>> meshList;
-    std::vector<std::shared_ptr<Texture>> textureList;
+    std::vector<std::shared_ptr<OpenGLMesh>> meshList;
+    std::vector<std::shared_ptr<OpenGLTexture>> textureList;
     std::vector<unsigned int> meshToTex; // Which texture corresponds to which mesh
 
 

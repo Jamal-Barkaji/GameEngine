@@ -7,15 +7,15 @@
 #include <glm\glm.hpp>
 #include "glm/gtc/type_ptr.hpp"
 
-#include "Texture.h"
-#include "Mesh.h"
-#include "Shader.h"
+#include "OpenGLTexture.h"
+#include "OpenGLMesh.h"
+#include "OpenGLShader.h"
 
 
 class Skybox {
 public:
     Skybox();
-    Skybox(std::vector<std::string> faceLocations, std::shared_ptr<Shader> shader);
+    Skybox(std::vector<std::string> faceLocations, std::shared_ptr<OpenGLShader> shader);
 
     ~Skybox();
 
@@ -25,8 +25,8 @@ public:
     GLuint getViewMatrix();
 
 private:
-    std::unique_ptr<Mesh> skyboxMesh;
-    std::shared_ptr<Shader> skyboxShader;
+    std::unique_ptr<OpenGLMesh> skyboxMesh;
+    std::shared_ptr<OpenGLShader> skyboxShader;
 
     GLuint skyboxTextureID;
     GLuint uniformProjection, uniformView;

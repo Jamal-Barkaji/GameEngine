@@ -1,9 +1,9 @@
-#include "Texture.h"
+#include "OpenGLTexture.h"
 
 #include "stb_image.h"
 
 
-Texture::Texture() {
+OpenGLTexture::OpenGLTexture() {
     textureID = 0;
     width = 0;
     height = 0;
@@ -11,7 +11,7 @@ Texture::Texture() {
     fileLocation = "";
 }
 
-Texture::Texture(std::string fileLoc) {
+OpenGLTexture::OpenGLTexture(std::string fileLoc) {
     textureID = 0;
     width = 0;
     height = 0;
@@ -19,11 +19,11 @@ Texture::Texture(std::string fileLoc) {
     fileLocation = fileLoc;
 }
 
-Texture::~Texture() {
-    clearTexture();
+OpenGLTexture::~OpenGLTexture() {
+    unbindTexture();
 }
 
-bool Texture::loadTexture() {
+bool OpenGLTexture::loadTexture() {
     unsigned char* texData = stbi_load(fileLocation.c_str(), &width, &height, &bitDepth, 0);
     if (!texData) {
         std::cout << "Failed to find/load: " << fileLocation
@@ -49,7 +49,7 @@ bool Texture::loadTexture() {
     return true;
 }
 
-bool Texture::loadTextureA() {
+bool OpenGLTexture::loadTextureA() {
     unsigned char* texData = stbi_load(fileLocation.c_str(), &width, &height, &bitDepth, 0);
     if (!texData) {
         std::cout << "Failed to find: " << fileLocation << std::endl;
@@ -74,12 +74,12 @@ bool Texture::loadTextureA() {
     return true;
 }
 
-void Texture::useTexture() {
+void OpenGLTexture::bindTexture() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
-void Texture::clearTexture() {
+void OpenGLTexture::unbindTexture() {
     glDeleteTextures(1, &textureID);
     textureID = 0;
     width = 0;

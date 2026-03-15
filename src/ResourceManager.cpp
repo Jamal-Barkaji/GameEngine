@@ -1,14 +1,14 @@
 #include "ResourceManager.h"
-#include "Texture.h"
-#include "Shader.h"
+#include "OpenGLTexture.h"
+#include "OpenGLShader.h"
 #include "Model.h"
 
 #include <iostream>
 
-std::shared_ptr<Texture> ResourceManager::loadTexture(const std::string& path) {
+std::shared_ptr<OpenGLTexture> ResourceManager::loadTexture(const std::string& path) {
     if (textures.count(path)) return textures[path];
 
-    auto tex = std::make_shared<Texture>(path);
+    auto tex = std::make_shared<OpenGLTexture>(path);
     if (!tex->loadTexture()) {
         std::cerr << "Failed to load texture: " << path << "\n";
 
@@ -20,19 +20,19 @@ std::shared_ptr<Texture> ResourceManager::loadTexture(const std::string& path) {
     return tex;
 }
 
-std::shared_ptr<Texture> ResourceManager::getDebugTexture() {
+std::shared_ptr<OpenGLTexture> ResourceManager::getDebugTexture() {
     if (!debugTexture) {
-        debugTexture = std::make_shared<Texture>("Assets/Textures/debugTexture.png");
+        debugTexture = std::make_shared<OpenGLTexture>("Assets/Textures/debugTexture.png");
         debugTexture->loadTexture();
     }
     return debugTexture;
 }
 
-std::shared_ptr<Shader> ResourceManager::loadShader(const std::string& vert, const std::string& frag) {
+std::shared_ptr<OpenGLShader> ResourceManager::loadShader(const std::string& vert, const std::string& frag) {
     std::string key = vert + "+" + frag;
     if (shaders.count(key)) return shaders[key];
 
-    auto shader = std::make_shared<Shader>();
+    auto shader = std::make_shared<OpenGLShader>();
     shader->createFromFiles(vert.c_str(), frag.c_str());
 
     shaders[key] = shader;

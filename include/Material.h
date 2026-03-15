@@ -2,23 +2,23 @@
 
 #include <glad/glad.h>
 
-#include "Texture.h"
-#include "Shader.h"
+#include "OpenGLTexture.h"
+#include "OpenGLShader.h"
 
 
 class Material {
 public:
     Material();
-    Material(GLfloat sIntensity, GLfloat shine);
+    Material(float sIntensity, float shine);
 
     ~Material();
 
-    void bind(Shader& shader) const;
+    void bindMaterial(IShader& shader) const;
 
 
-    std::shared_ptr<Texture> albedoMap;
+    std::shared_ptr<ITexture> albedoMap;
 
 private:
-    GLfloat specularIntensity;
-    GLfloat shininess;
+    float specularIntensity;
+    float shininess;
 };

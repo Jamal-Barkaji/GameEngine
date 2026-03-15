@@ -3,11 +3,9 @@
 #include "Scene.h"
 
 
-class IRenderer {
+class IOpenGLRenderer {
 public:
-    IRenderer() = default;
+    virtual ~IOpenGLRenderer() = default;
 
-    virtual ~IRenderer() = default;
-
-    virtual void renderFrame(Scene& scene, Camera& camera, Shader& mainShader, Shader& shadowShader) = 0;
+    virtual void renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) = 0;
 };

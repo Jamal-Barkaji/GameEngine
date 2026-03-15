@@ -9,7 +9,7 @@ Light::Light() {
     diffuseIntensity = 0.0f;
 }
 
-Light::Light(GLfloat shadowWidth, GLfloat shadowHeight, GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLfloat dIntensity) {
+Light::Light(float shadowWidth, float shadowHeight, float red, float green, float blue, float aIntensity, float dIntensity) {
     shadowMap = new ShadowMap();
     shadowMap->init(shadowWidth, shadowHeight);
 
@@ -18,7 +18,7 @@ Light::Light(GLfloat shadowWidth, GLfloat shadowHeight, GLfloat red, GLfloat gre
     diffuseIntensity = dIntensity;
 }
 
-Light::~Light() {}
+Light::~Light() = default;
 
 ShadowMap* Light::getShadowMap() {
     return shadowMap;
@@ -29,3 +29,10 @@ ShadowMap* Light::getShadowMap() {
 //    glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
 //    glUniform1f(ambientIntensityLocation, ambientIntensity);
 //}
+
+void Light::useLight(IShader& shader) {
+    shader.setVec3("colour", colour);
+    shader.setFloat("ambientIntensity", ambientIntensity);
+    shader.setFloat("diffuseIntensity", diffuseIntensity);
+    shader.setMat4("lightProj", lightProj);
+}

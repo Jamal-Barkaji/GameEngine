@@ -1,20 +1,20 @@
 #pragma once
 
+#include "IShader.h"
 #include "Light.h"
 
 
 class DirectionalLight : public Light {
 public:
     DirectionalLight();
-    DirectionalLight(GLfloat shadowWidth, GLfloat shadowHeight,
-                        GLfloat red, GLfloat green, GLfloat blue,
-                        GLfloat aIntensity, GLfloat dIntensity,
-                        GLfloat xDir, GLfloat yDir, GLfloat zDir);
+    DirectionalLight(float shadowWidth, float shadowHeight,
+                        float red, float green, float blue,
+                        float aIntensity, float dIntensity,
+                        float xDir, float yDir, float zDir);
 
-    ~DirectionalLight();
+    ~DirectionalLight() override;
 
-    void useLight(unsigned int ambientIntensityLocation, unsigned int ambientColourLocation,
-                    unsigned int diffuseIntensityLocation, unsigned int directionLocation);
+    void useLight(IShader& shader) override;
 
     glm::mat4 calculateLightTransform();
 

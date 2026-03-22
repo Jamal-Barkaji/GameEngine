@@ -1,20 +1,11 @@
 #include "PhysicsSystem.h"
-#include "Camera.h"
 #include "Entity.h"
-
-#include <vector>
 
 
 PhysicsSystem::PhysicsSystem() = default;
 
 PhysicsSystem::~PhysicsSystem() = default;
 
-// void PhysicsSystem::updateWorldAABB(Entity& entity) {
-//     const AABB& localAABB = *entity.physicsData.localAABB;
-//     glm::vec3 worldMin = localAABB.min + glm::vec3(entity.transform[3]);
-//     glm::vec3 worldMax = localAABB.max + glm::vec3(entity.transform[3]);
-//     entity.physicsData.worldAABB = {worldMin, worldMax};
-// }
 
 bool PhysicsSystem::checkCollision(const AABB& box1, const AABB& box2) {
     bool collisionX = box1.max.x >= box2.min.x && box2.max.x >= box1.min.x;
@@ -38,16 +29,11 @@ void PhysicsSystem::step(Camera& camera, std::vector<Entity>& entities, float de
     for (auto& entity : entities) {
         if (!entity.physicsData.active) continue;
 
-        // 1. Update the world position of the collider
         updateWorldAABB(entity);
 
-        // 2. Check against camera
+        // Check against camera
         if (checkCollision(camBox, entity.physicsData.worldAABB)) {
-            // Collision resolution: stop the camera
             camera.moveCameraBackwards(deltaTime);
         }
-
-        // 3. (Optional) Check entities against each other
-        // This would require a nested loop (O(n^2)), which is fine for small scenes
     }
 }

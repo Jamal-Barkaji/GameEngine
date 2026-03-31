@@ -46,23 +46,23 @@ bool Model::loadModel(const std::string& fileName, ResourceManager& resources) {
         return false;
     }
 
-    loadNode(scene->mRootNode, scene);
+    loadNode(scene->mRootNode, scene, resources);
 
     loadMaterials(scene, resources);
     return true;
 }
 
-void Model::loadNode(aiNode* node, const aiScene* scene) {
+void Model::loadNode(aiNode* node, const aiScene* scene, ResourceManager& resources) {
     for (size_t i = 0; i < node->mNumMeshes; i++) {
-        loadMesh(scene->mMeshes[node->mMeshes[i]], scene);
+        loadMesh(scene->mMeshes[node->mMeshes[i]], scene, resources);
     }
 
     for (size_t i = 0; i < node->mNumChildren; i++) {
-        loadNode(node->mChildren[i], scene);
+        loadNode(node->mChildren[i], scene, resources);
     }
 }
 
-void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
+void Model::loadMesh(aiMesh* mesh, const aiScene* scene, ResourceManager& resources) {
     std::vector<float> vertexData;
     std::vector<unsigned int> indices;
 
@@ -89,7 +89,7 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
         }
     }
 
-    auto newMesh = std::make_shared<OpenGLMesh>(); //TODO: Replace with factory method for different mesh types later
+    auto newMesh = resources.createMesh();
     newMesh->createMesh(vertexData.data(), indices.data(), vertexData.size(), indices.size());
 
     AABB bounds = AABB::generateFromVertices(vertexData, 8);

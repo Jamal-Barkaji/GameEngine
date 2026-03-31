@@ -59,6 +59,9 @@ add_executable(GameEngine main.cpp
         include/IShader.h
         include/ITexture.h
         include/IMesh.h
+        include/IResourceFactory.h
+        include/OpenGLResourceFactory.h
+        src/OpenGLResourceFactory.cpp
 )
 
 find_package(glad CONFIG REQUIRED)

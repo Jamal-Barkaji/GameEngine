@@ -28,8 +28,8 @@ public:
 
 private:
     bool loadModel(const std::string& fileName, ResourceManager& resources);
-    void loadNode(aiNode* node, const aiScene* scene);
-    void loadMesh(aiMesh* mesh, const aiScene* scene);
+    void loadNode(aiNode* node, const aiScene* scene, ResourceManager& resources);
+    void loadMesh(aiMesh* mesh, const aiScene* scene, ResourceManager& resources);
     void loadMaterials(const aiScene* scene, ResourceManager& resources);
 
 

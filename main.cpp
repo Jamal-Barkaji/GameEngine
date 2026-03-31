@@ -6,6 +6,7 @@
 #include "OpenGLRenderer.h"
 #include "Loop.h"
 #include "Material.h"
+#include "OpenGLResourceFactory.h"
 #include "PhysicsSystem.h"
 #include "Scene.h"
 #include "Skybox.h"
@@ -18,7 +19,8 @@ int main(int argc, char* argv[]) {
     Transformer transformer;
     Camera camera = Camera(window, glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 5.0f, 0.2f);
 
-    ResourceManager resourceManager;
+    std::unique_ptr<OpenGLResourceFactory> resourceFactory;
+    ResourceManager resourceManager(std::make_unique<OpenGLResourceFactory>());
 
     std::shared_ptr<OpenGLShader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
     std::shared_ptr<OpenGLShader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");

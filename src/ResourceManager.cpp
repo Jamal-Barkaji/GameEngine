@@ -5,10 +5,18 @@
 
 #include <iostream>
 
+
+ResourceManager::ResourceManager(std::unique_ptr<IResourceFactory> rf) : resourceFactory(std::move(rf)) {}
+
+
+std::shared_ptr<IMesh> ResourceManager::createMesh() {
+    return resourceFactory->createMesh();
+}
+
 std::shared_ptr<ITexture> ResourceManager::loadTexture(const std::string& path) {
     if (textures.count(path)) return textures[path];
 
-    auto tex = std::make_shared<OpenGLTexture>(path);
+    auto tex = resourceFactory->createTexture(path);
     if (!tex->loadTexture()) {
         std::cerr << "Failed to load texture: " << path << "\n";
 
@@ -22,7 +30,7 @@ std::shared_ptr<ITexture> ResourceManager::loadTexture(const std::string& path) 
 
 std::shared_ptr<ITexture> ResourceManager::getDebugTexture() {
     if (!debugTexture) {
-        debugTexture = std::make_shared<OpenGLTexture>("Assets/Textures/debugTexture.png");
+        auto tex = resourceFactory->createTexture("Assets/Textures/debugTexture.png");
         debugTexture->loadTexture();
     }
     return debugTexture;

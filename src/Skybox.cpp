@@ -112,10 +112,10 @@ void Skybox::drawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
     glDepthMask(GL_TRUE);
 }
 
-GLuint Skybox::getProjectionMatrix() {
+unsigned int Skybox::getProjectionMatrix() {
     return uniformProjection;
 }
 
-GLuint Skybox::getViewMatrix() {
+unsigned int Skybox::getViewMatrix() {
     return uniformView;
 }

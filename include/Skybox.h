@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 
-#include <glad\glad.h>
 #include <glm\glm.hpp>
 #include "glm/gtc/type_ptr.hpp"
 
@@ -21,13 +20,13 @@ public:
 
     void drawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
-    GLuint getProjectionMatrix();
-    GLuint getViewMatrix();
+    unsigned int getProjectionMatrix();
+    unsigned int getViewMatrix();
 
 private:
     std::unique_ptr<OpenGLMesh> skyboxMesh;
     std::shared_ptr<OpenGLShader> skyboxShader;
 
-    GLuint skyboxTextureID;
-    GLuint uniformProjection, uniformView;
+    unsigned int skyboxTextureID;
+    unsigned int uniformProjection, uniformView;
 };

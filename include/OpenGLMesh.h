@@ -15,8 +15,8 @@ class OpenGLMesh : public IMesh {
         void drawMesh() override;
         void clearMesh() override;
 
-        void setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB);
-        AABB getLocalBounds();
+        void setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB) override;
+        AABB getLocalBounds() override;
 
     private:
         GLuint VAO, VBO, IBO;

@@ -17,11 +17,12 @@ public:
     ~OpenGLTexture() override;
 
     void bindTexture() override;
+    void bindTexture(unsigned int slot) override;
     void unbindTexture();
 
 private:
-    bool loadTexture();
-    bool loadTextureA();
+    bool loadTexture() override;
+    bool loadTextureA() override;
 
 
     GLuint textureID;

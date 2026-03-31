@@ -1,4 +1,8 @@
 #include "Model.h"
+
+#include <iostream>
+
+#include "OpenGLMesh.h"
 #include "ResourceManager.h"
 #include "glm/common.hpp"
 #include "glm/vec3.hpp"
@@ -12,7 +16,7 @@ Model::~Model() {
 
 }
 
-void Model::addMesh(const std::shared_ptr<OpenGLMesh>& mesh) {
+void Model::addMesh(const std::shared_ptr<IMesh>& mesh) {
     meshList.push_back(mesh);
 }
 
@@ -85,7 +89,7 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene) {
         }
     }
 
-    auto newMesh = std::make_shared<OpenGLMesh>();
+    auto newMesh = std::make_shared<OpenGLMesh>(); //TODO: Replace with factory method for different mesh types later
     newMesh->createMesh(vertexData.data(), indices.data(), vertexData.size(), indices.size());
 
     AABB bounds = AABB::generateFromVertices(vertexData, 8);
@@ -101,7 +105,7 @@ void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
     for (size_t i = 0; i < scene->mNumMaterials; i++) {
         aiMaterial* material = scene->mMaterials[i];
 
-        std::shared_ptr<OpenGLTexture> tex = nullptr;
+        std::shared_ptr<ITexture> tex = nullptr;
 
         if (material->GetTextureCount(aiTextureType_DIFFUSE)) {
             aiString path;

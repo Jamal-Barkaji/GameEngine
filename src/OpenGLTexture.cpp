@@ -79,6 +79,11 @@ void OpenGLTexture::bindTexture() {
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
+void OpenGLTexture::bindTexture(unsigned int slot) {
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+}
+
 void OpenGLTexture::unbindTexture() {
     glDeleteTextures(1, &textureID);
     textureID = 0;

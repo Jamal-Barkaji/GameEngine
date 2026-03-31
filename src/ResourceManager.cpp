@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-std::shared_ptr<OpenGLTexture> ResourceManager::loadTexture(const std::string& path) {
+std::shared_ptr<ITexture> ResourceManager::loadTexture(const std::string& path) {
     if (textures.count(path)) return textures[path];
 
     auto tex = std::make_shared<OpenGLTexture>(path);
@@ -20,7 +20,7 @@ std::shared_ptr<OpenGLTexture> ResourceManager::loadTexture(const std::string& p
     return tex;
 }
 
-std::shared_ptr<OpenGLTexture> ResourceManager::getDebugTexture() {
+std::shared_ptr<ITexture> ResourceManager::getDebugTexture() {
     if (!debugTexture) {
         debugTexture = std::make_shared<OpenGLTexture>("Assets/Textures/debugTexture.png");
         debugTexture->loadTexture();

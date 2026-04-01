@@ -30,7 +30,7 @@ std::shared_ptr<ITexture> ResourceManager::loadTexture(const std::string& path) 
 
 std::shared_ptr<ITexture> ResourceManager::getDebugTexture() {
     if (!debugTexture) {
-        auto tex = resourceFactory->createTexture("Assets/Textures/debugTexture.png");
+        debugTexture = resourceFactory->createTexture("Assets/Textures/debugTexture.png");
         debugTexture->loadTexture();
     }
     return debugTexture;

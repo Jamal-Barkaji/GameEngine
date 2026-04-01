@@ -27,9 +27,10 @@ int main(int argc, char* argv[]) {
 
     Scene scene;
 
+    //TODO: Materials shouldn't need manually set values. They should be loaded from the model file or set to some default. Also add PBR support
     Material brickMaterial = Material(1.0f, 32);
     Material concreteMaterial = Material(2.0f, 40);
-    Material knightMaterial = Material(10.0f, 100);
+    Material knightMaterial = Material();
 
     brickMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/factory_brick_diff_4k.png");
     concreteMaterial.albedoMap = resourceManager.loadTexture("Assets/Textures/painted_concrete_02_diff_4k.png");

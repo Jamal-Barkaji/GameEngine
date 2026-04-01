@@ -33,6 +33,6 @@ private:
     std::unordered_map<std::string, std::shared_ptr<OpenGLShader>> shaders;
     std::unordered_map<std::string, std::shared_ptr<Model>> models;
 
-    std::shared_ptr<OpenGLTexture> debugTexture;
+    std::shared_ptr<ITexture> debugTexture;
 };
 

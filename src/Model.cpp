@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "OpenGLMesh.h"
 #include "ResourceManager.h"
 #include "glm/common.hpp"
 #include "glm/vec3.hpp"
@@ -20,17 +19,15 @@ void Model::addMesh(const std::shared_ptr<IMesh>& mesh) {
     meshList.push_back(mesh);
 }
 
-void Model::renderModel() {
+void Model::renderModel(IShader& shader) {
     for (size_t i = 0; i < meshList.size(); i++) {
-        if (i < meshToTex.size()) {
-            unsigned int materialIndex = meshToTex[i];
+        if (i < meshToMat.size()) {
+            unsigned int materialIndex = meshToMat[i];
 
-            //TODO: Replace this logic with Material's bind shader method later
-            if (materialIndex < textureList.size() && textureList[materialIndex]) {
-                textureList[materialIndex]->bindTexture();
+            if (materialIndex < materialList.size() && materialList[materialIndex]) {
+                materialList[materialIndex]->bindMaterial(shader);
             }
         }
-
         if (meshList[i]) {
             meshList[i]->drawMesh();
         }
@@ -96,16 +93,23 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene, ResourceManager& resour
     newMesh->setLocalBounds(bounds.min, bounds.max);
 
     meshList.push_back(newMesh);
-    meshToTex.push_back(mesh->mMaterialIndex);
+    meshToMat.push_back(mesh->mMaterialIndex);
 }
 
 void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
-    textureList.resize(scene->mNumMaterials);
+    materialList.resize(scene->mNumMaterials);
 
     for (size_t i = 0; i < scene->mNumMaterials; i++) {
         aiMaterial* material = scene->mMaterials[i];
 
-        std::shared_ptr<ITexture> tex = nullptr;
+        //TODO: Remove hardcoded values and load from model file. Also add PBR support
+        float shininess = 100.0f;
+        float specularStrength = 10.0f;
+
+        // material->Get(AI_MATKEY_SHININESS, shininess);
+        // material->Get(AI_MATKEY_SHININESS_STRENGTH, specularStrength);
+
+        auto newMat = std::make_shared<Material>(specularStrength, shininess);
 
         if (material->GetTextureCount(aiTextureType_DIFFUSE)) {
             aiString path;
@@ -117,15 +121,15 @@ void Model::loadMaterials(const aiScene* scene, ResourceManager& resources) {
                 }
 
                 std::string texPath = "Assets/Textures/" + filename;
-                tex = resources.loadTexture(texPath);
+                newMat->albedoMap = resources.loadTexture(texPath);
             }
         }
 
-        if (!tex) {
-            tex = resources.loadTexture("Assets/Textures/debugTexture.png");
+        if (!newMat->albedoMap) {
+            newMat->albedoMap = resources.getDebugTexture();
         }
 
-        textureList[i] = tex;
+        materialList[i] = newMat;
     }
 }
 

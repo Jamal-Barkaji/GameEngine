@@ -9,7 +9,9 @@
 #include <assimp/postprocess.h>
 
 #include "IMesh.h"
+#include "IShader.h"
 #include "ITexture.h"
+#include "Material.h"
 #include "PhysicsObject.h"
 
 
@@ -22,7 +24,7 @@ public:
 
     void addMesh(const std::shared_ptr<IMesh>& mesh);
 
-    void renderModel();
+    void renderModel(IShader& shader);
 
     AABB getFullModelAABB() const;
 
@@ -34,8 +36,8 @@ private:
 
 
     std::vector<std::shared_ptr<IMesh>> meshList;
-    std::vector<std::shared_ptr<ITexture>> textureList;
-    std::vector<unsigned int> meshToTex; // Which texture corresponds to which mesh
+    std::vector<std::shared_ptr<Material>> materialList;
+    std::vector<unsigned int> meshToMat; // Which material corresponds to which mesh
 
 
     friend class ResourceManager;

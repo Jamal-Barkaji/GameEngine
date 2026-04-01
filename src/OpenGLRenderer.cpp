@@ -88,7 +88,7 @@ void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
 
         // Draw
         if (entity.renderData.model) {
-            entity.renderData.model->renderModel();
+            entity.renderData.model->renderModel(shader);
         }
     }
 

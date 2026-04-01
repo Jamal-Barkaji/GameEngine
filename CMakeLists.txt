@@ -39,8 +39,8 @@ add_executable(GameEngine main.cpp
         src/SpotLight.cpp
         include/Model.h
         src/Model.cpp
-        include/ShadowMap.h
-        src/ShadowMap.cpp
+        include/OpenGLShadowMap.h
+        src/OpenGLShadowMap.cpp
         include/ResourceManager.h
         src/ResourceManager.cpp
         include/Scene.h
@@ -62,6 +62,7 @@ add_executable(GameEngine main.cpp
         include/IResourceFactory.h
         include/OpenGLResourceFactory.h
         src/OpenGLResourceFactory.cpp
+        include/IShadowMap.h
 )
 
 find_package(glad CONFIG REQUIRED)

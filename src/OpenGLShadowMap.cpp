@@ -1,15 +1,15 @@
-#include "ShadowMap.h"
+#include "OpenGLShadowMap.h"
 
 #include <iostream>
 #include <__msvc_ostream.hpp>
 
 
-ShadowMap::ShadowMap() {
+OpenGLShadowMap::OpenGLShadowMap() {
     FBO = 0;
     shadowMap = 0;
 }
 
-ShadowMap::~ShadowMap() {
+OpenGLShadowMap::~OpenGLShadowMap() {
     if (FBO) {
         glDeleteFramebuffers(1, &FBO);
     }
@@ -18,7 +18,7 @@ ShadowMap::~ShadowMap() {
     }
 }
 
-bool ShadowMap::init(GLuint width, GLuint height) {
+bool OpenGLShadowMap::init(GLuint width, GLuint height) {
     shadowWidth = width; shadowHeight = height;
 
     glGenFramebuffers(1, &FBO);
@@ -52,19 +52,19 @@ bool ShadowMap::init(GLuint width, GLuint height) {
     return true;
 }
 
-void ShadowMap::write() {
+void OpenGLShadowMap::write() {
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 }
 
-void ShadowMap::read(GLenum textureUnit) {
+void OpenGLShadowMap::read(GLenum textureUnit) {
     glActiveTexture(textureUnit);
     glBindTexture(GL_TEXTURE_2D, shadowMap);
 }
 
-GLuint ShadowMap::getShadowWidth() {
+GLuint OpenGLShadowMap::getShadowWidth() {
     return shadowWidth;
 }
 
-GLuint ShadowMap::getShadowHeight() {
+GLuint OpenGLShadowMap::getShadowHeight() {
     return shadowHeight;
 }

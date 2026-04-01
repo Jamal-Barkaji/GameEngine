@@ -7,8 +7,8 @@ Light::Light() {
     diffuseIntensity = 0.0f;
 }
 
-Light::Light(float shadowWidth, float shadowHeight, float red, float green, float blue, float aIntensity, float dIntensity) {
-    shadowMap = new ShadowMap();
+Light::Light(unsigned int shadowWidth, unsigned int shadowHeight, float red, float green, float blue, float aIntensity, float dIntensity) {
+    shadowMap = new OpenGLShadowMap();
     shadowMap->init(shadowWidth, shadowHeight);
 
     colour = glm::vec3(red, green, blue);
@@ -19,7 +19,7 @@ Light::Light(float shadowWidth, float shadowHeight, float red, float green, floa
 Light::~Light() = default;
 
 
-ShadowMap* Light::getShadowMap() {
+OpenGLShadowMap* Light::getShadowMap() {
     return shadowMap;
 }
 

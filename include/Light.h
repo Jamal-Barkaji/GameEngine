@@ -4,19 +4,19 @@
 #include <glm\gtc\matrix_transform.hpp>
 
 #include "IShader.h"
-#include "ShadowMap.h"
+#include "OpenGLShadowMap.h"
 
 
 class Light {
 public:
     Light();
-    Light(float shadowWidth, float shadowHeight,
+    Light(unsigned int shadowWidth, unsigned int shadowHeight,
             float red, float green, float blue,
             float aIntensity, float dIntensity);
 
     virtual ~Light();
 
-    ShadowMap* getShadowMap();
+    OpenGLShadowMap* getShadowMap();
 
     virtual void useLight(IShader& shader, const std::string& prefix) = 0;
 
@@ -27,5 +27,5 @@ protected:
 
     glm::mat4 lightProj;
 
-    ShadowMap* shadowMap;
+    OpenGLShadowMap* shadowMap;
 };

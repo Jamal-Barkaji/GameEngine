@@ -66,11 +66,3 @@ void OpenGLMesh::drawMesh() {
 
     glBindVertexArray(0);
 }
-
-void OpenGLMesh::setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB) {
-    localBound = { minAABB, maxAABB };
-}
-
-AABB OpenGLMesh::getLocalBounds() {
-    return localBound;
-}

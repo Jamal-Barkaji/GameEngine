@@ -63,6 +63,8 @@ add_executable(GameEngine main.cpp
         include/OpenGLResourceFactory.h
         src/OpenGLResourceFactory.cpp
         include/IShadowMap.h
+        include/BaseMesh.h
+        src/BaseMesh.cpp
 )
 
 find_package(glad CONFIG REQUIRED)

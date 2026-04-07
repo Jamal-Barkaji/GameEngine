@@ -2,11 +2,11 @@
 
 #include <glad/glad.h>
 
-#include "IMesh.h"
+#include "BaseMesh.h"
 #include "PhysicsObject.h"
 
 
-class OpenGLMesh : public IMesh {
+class OpenGLMesh : public BaseMesh {
     public:
         OpenGLMesh();
         ~OpenGLMesh() override;
@@ -15,12 +15,7 @@ class OpenGLMesh : public IMesh {
         void drawMesh() override;
         void clearMesh() override;
 
-        void setLocalBounds(const glm::vec3& minAABB, const glm::vec3& maxAABB) override;
-        AABB getLocalBounds() override;
-
     private:
         GLuint VAO, VBO, IBO;
         GLsizei indexCount;
-
-        AABB localBound{};
 };

@@ -16,3 +16,4 @@ build/
 *.so
 *.a
 *.lib
+.qtcreator/

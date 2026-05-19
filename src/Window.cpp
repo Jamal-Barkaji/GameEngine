@@ -20,14 +20,25 @@ bool Window::init() {
         success = false;
     }
     else {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+        #ifdef __APPLE__
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+        #endif
+
+
         //Create window
-        gWindow = SDL_CreateWindow( "SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,  SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,  SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI );
         if( gWindow == nullptr ) {
             std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
             success = false;
         }
         else {
-            SDL_GLContext glContext = SDL_GL_CreateContext(gWindow);
+            glContext = SDL_GL_CreateContext(gWindow);
         }
     }
     return success;

@@ -25,4 +25,5 @@ private:
     int screenHeight = 768;
 
     SDL_Window* gWindow = nullptr;
+    SDL_GLContext glContext;
 };

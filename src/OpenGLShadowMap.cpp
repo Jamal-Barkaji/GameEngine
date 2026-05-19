@@ -1,7 +1,6 @@
 #include "OpenGLShadowMap.h"
 
 #include <iostream>
-#include <__msvc_ostream.hpp>
 
 
 OpenGLShadowMap::OpenGLShadowMap() {

@@ -29,8 +29,9 @@ void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShad
 }
 
 void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
-    //TODO: Make viewport dynamic based on window size
-    glViewport(0, 0, 1366, 768);
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

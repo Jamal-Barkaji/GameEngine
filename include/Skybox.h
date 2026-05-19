@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include "glm/gtc/type_ptr.hpp"
 
 #include "OpenGLTexture.h"

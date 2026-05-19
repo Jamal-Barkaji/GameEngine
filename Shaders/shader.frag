@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 in vec4 vCol;
 in vec2 texCoord;
@@ -86,21 +86,21 @@ vec3 projCoords = directionalLightSpacePos.xyz / directionalLightSpacePos.w;
 }
 
 vec4 calcLightByDirection(Light light, vec3 direction, float shadowFactor) {
-    vec4 ambientColour = vec4(light.colour, 1.0f) * light.ambientIntensity;
+    vec4 ambientColour = vec4(light.colour, 1.0) * light.ambientIntensity;
 
-    float diffuseFactor = max(dot(normalize(normal), -normalize(direction)), 0.0f);
-    vec4 diffuseColour = vec4(light.colour, 1.0f) * light.diffuseIntensity * diffuseFactor;
+    float diffuseFactor = max(dot(normalize(normal), -normalize(direction)), 0.0);
+    vec4 diffuseColour = vec4(light.colour, 1.0) * light.diffuseIntensity * diffuseFactor;
 
     vec4 specularColour = vec4(0, 0, 0, 0);
 
-    if (diffuseFactor > 0.0f) {
+    if (diffuseFactor > 0.0) {
         vec3 fragToEye = normalize(eyePosition - fragPos);
         vec3 reflectedVertex = normalize(reflect(direction, normalize(normal)));
 
         float specularFactor = dot(fragToEye, reflectedVertex);
-        if (specularFactor > 0.0f) {
+        if (specularFactor > 0.0) {
             specularFactor = pow(specularFactor, material.shininess);
-            specularColour = vec4(light.colour * material.specularIntensity * specularFactor, 1.0f);
+            specularColour = vec4(light.colour * material.specularIntensity * specularFactor, 1.0);
         }
     }
 
@@ -117,7 +117,7 @@ vec4 calcPointLight(PointLight pLight) {
     float distance = length(direction);
     direction = normalize(direction);
 
-    vec4 colour = calcLightByDirection(pLight.base, direction, 0.0f);
+    vec4 colour = calcLightByDirection(pLight.base, direction, 0.0);
     float attenuation = pLight.exponent * distance * distance +
                         pLight.linear * distance +
                         pLight.constant;
@@ -131,7 +131,7 @@ vec4 calcSpotLight(SpotLight sLight) {
 
     if (slFactor > sLight.edge) {
         vec4 colour = calcPointLight(sLight.base);
-        float slEffect = (1.0f - (1.0f - slFactor) * (1.0f / (1.0f - sLight.edge)));
+        float slEffect = (1.0 - (1.0 - slFactor) * (1.0 / (1.0 - sLight.edge)));
         return (colour * slEffect);
     } else {
         return vec4(0, 0, 0, 0);
@@ -163,3 +163,4 @@ vec4 calcSpotLights() {
 
         colour = texture(theTexture, texCoord) * finalColour;
     }
+    

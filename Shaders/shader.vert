@@ -1,4 +1,4 @@
-#version 330
+#version 330 core 
 
     layout (location = 0) in vec3 pos;
     layout (location = 1) in vec2 tex;
@@ -20,13 +20,12 @@
         gl_Position = projection * view * model * vec4(pos, 1.0);
         directionalLightSpacePos = directionalLightTransform * model * vec4(pos, 1.0);
 
-        vCol = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);
+        vCol = vec4(clamp(pos, 0.0, 1.0), 1.0);
 
         texCoord = tex;
 
         normal = mat3(transpose(inverse(model))) * norm;
 
         fragPos = (model * vec4(pos, 1.0)).xyz;
-
-        vec3 a = vec3(1, 2, 3);
     }
+    

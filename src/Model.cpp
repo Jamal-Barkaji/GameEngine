@@ -60,6 +60,7 @@ void Model::loadNode(aiNode* node, const aiScene* scene, ResourceManager& resour
 }
 
 void Model::loadMesh(aiMesh* mesh, const aiScene* scene, ResourceManager& resources) {
+    std::cout << "Loading Mesh: " << mesh->mName.C_Str() << " with " << mesh->mNumVertices << " vertices." << std::endl;
     std::vector<float> vertexData;
     std::vector<unsigned int> indices;
 

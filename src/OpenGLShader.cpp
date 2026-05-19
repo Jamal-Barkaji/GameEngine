@@ -96,7 +96,7 @@ void OpenGLShader::compileShader(const char* vertexCode, const char* fragmentCod
         return;
     }
 
-    glValidateProgram(shaderID);
+    //glValidateProgram(shaderID);
     glGetProgramiv(shaderID, GL_VALIDATE_STATUS, &result);
     if (!result) {
         glGetProgramInfoLog(shaderID, sizeof(elog), NULL, elog);
@@ -284,15 +284,8 @@ void OpenGLShader::bindShader() const {
 }
 
 void OpenGLShader::unbindShader() const {
-    if (shaderID != 0) {
-        glDeleteProgram(shaderID);
-    //     shaderID = 0;
-    }
-    //
-    // uniformModel = 0;
-    // uniformProjection = 0;
+    glUseProgram(0); 
 }
-
 
 void OpenGLShader::addShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) {
     GLuint theShader = glCreateShader(shaderType);
@@ -307,6 +300,7 @@ void OpenGLShader::addShader(GLuint theProgram, const char* shaderCode, GLenum s
     if (!result) {
         glGetShaderInfoLog(theShader, sizeof(elog), nullptr, elog);
         std::cerr << "Error compiling shader type " << shaderType << ":\n" << elog << '\n';
+        std::cout << "Shader Code being compiled:\n" << shaderCode << std::endl;
         return;
     }
 

@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 
-void Loop::run(Window& window, IOpenGLRenderer& renderer, Transformer& transformer, Camera& camera, Scene& scene, OpenGLShader& mainShader, OpenGLShader& shadowShader, PhysicsSystem& physics) {
+void Loop::run(Window& window, IRenderer& renderer, Transformer& transformer, Camera& camera, Scene& scene, IShader& mainShader, IShader& shadowShader, PhysicsSystem& physics) {
         bool quit = false;
         SDL_Event e;
 
@@ -57,7 +57,5 @@ void Loop::run(Window& window, IOpenGLRenderer& renderer, Transformer& transform
             transformer.transform();
             //Rendering
             renderer.renderFrame(scene, camera, mainShader, shadowShader);
-
-            window.swapBuffers();
         }
 }

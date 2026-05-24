@@ -14,8 +14,12 @@
 
 
 int main(int argc, char* argv[]) {
+    SDL_Init(SDL_INIT_VIDEO);
+    OpenGLRenderer::configureContext();
     Window window;
-    OpenGLRenderer renderer;
+    window.init(SDL_WINDOW_OPENGL);
+    OpenGLRenderer renderer(window.getSDLWindow());
+
     Transformer transformer;
     Camera camera = Camera(window, glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 5.0f, 0.2f);
 

@@ -8,7 +8,16 @@
 #include "Scene.h"
 
 
-OpenGLRenderer::OpenGLRenderer() {
+OpenGLRenderer::OpenGLRenderer(SDL_Window* window) : window(window) {
+    // Context Creation
+    glContext = SDL_GL_CreateContext(window);
+
+    if (!glContext) {
+        std::cerr << "Failed to create OpenGL context: " << SDL_GetError() << '\n';
+        return;
+    }
+
+    // Load GLAD
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         std::cerr << "Failed to initialize GLAD\n";
         return;
@@ -18,7 +27,23 @@ OpenGLRenderer::OpenGLRenderer() {
 }
 
 OpenGLRenderer::~OpenGLRenderer() {
+    SDL_GL_DeleteContext(glContext);
+}
 
+
+void OpenGLRenderer::configureContext() {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+#ifdef __APPLE__
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+#endif
+}
+
+void OpenGLRenderer::swapBuffers() {
+    SDL_GL_SwapWindow(window);
 }
 
 void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) {
@@ -26,6 +51,8 @@ void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShad
     //     directionalShadowMapPass(scene, shadowShader);
     // }
     renderPass(scene, mainShader, camera);
+
+    swapBuffers();
 }
 
 void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {

@@ -1,13 +1,10 @@
 #include "GeometryGenerator.h"
 
-#include "OpenGLMesh.h"
-#include "Model.h"
-
 #include <glm/vec3.hpp>
 #include <glm/ext/quaternion_geometric.hpp>
 
 
-void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
+void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, float* vertices, unsigned int verticeCount,
                         unsigned int vertLength, unsigned int normalOffset) {
 
     for (size_t i = 0; i < indiceCount; i += 3) {
@@ -35,13 +32,15 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
     }
 }
 
-std::shared_ptr<Model> GeometryGenerator::generatePlane() {
-    std::vector<unsigned int> planeIndices = {
+MeshData GeometryGenerator::generatePlane() {
+    MeshData data;
+
+    data.indices = {
         0, 2, 1,
         1, 2, 3
     };
 
-    std::vector<float> planeVertices = {
+    data.vertices = {
         //   x       y     z         u      v           nx      ny      nz
         -10.0f, 0.0f, -10.0f,    0.0f,  0.0f,       0.0f,   1.0f,   0.0f,
         10.0f, 0.0f, -10.0f,     10.0f, 0.0f,       0.0f,   1.0f,   0.0f,
@@ -49,28 +48,21 @@ std::shared_ptr<Model> GeometryGenerator::generatePlane() {
         10.0f, 0.0f, 10.f,       10.f,  10.0f,      0.0f,   1.0f,   0.0f
     };
 
-    std::shared_ptr<OpenGLMesh> planeMesh = std::make_shared<OpenGLMesh>();
-    planeMesh->createMesh(planeVertices.data(), planeIndices.data(), 32, 6);
-
-    AABB bounds = AABB::generateFromVertices(planeVertices, 8);
-    planeMesh->setLocalBounds(bounds.min, bounds.max);
-
-    std::shared_ptr<Model> planeModel = std::make_shared<Model>();
-    planeModel->addMesh(planeMesh);
-
-    return planeModel;
+    return data;
 }
 
 
-std::shared_ptr<Model> GeometryGenerator::generatePyramid() {
-    std::vector<unsigned int> pyramidIndices = {
+MeshData GeometryGenerator::generatePyramid() {
+    MeshData data;
+
+    data.indices = {
         0, 1, 3,
         1, 2, 3,
         2, 0, 3,
         0, 2, 1
     };
 
-    std::vector<float> pyramidVertices = {
+    data.vertices = {
         //   x       y     z         u      v           nx      ny      nz
         -1.0f, -1.0f, -0.6f,    0.0f,   0.0f,       0.0f,   0.0f,   0.0f,
          0.0f, -1.0f,  1.0f,    0.5f,   0.0f,       0.0f,   0.0f,   0.0f,
@@ -78,16 +70,46 @@ std::shared_ptr<Model> GeometryGenerator::generatePyramid() {
          0.0f,  1.0f,  0.0f,    0.5f,   1.0f,       0.0f,   0.0f,   0.0f
     };
 
-    calcAverageNormals(pyramidIndices.data(), pyramidIndices.size(), pyramidVertices.data(), pyramidVertices.size(), 8, 5);
+    calcAverageNormals(data.indices.data(), data.indices.size(), data.vertices.data(), data.vertices.size(), 8, 5);
 
-    std::shared_ptr<OpenGLMesh> pyramidMesh = std::make_shared<OpenGLMesh>();
-    pyramidMesh->createMesh(pyramidVertices.data(), pyramidIndices.data(), pyramidVertices.size(), pyramidIndices.size());
+    return data;
+}
 
-    AABB bounds = AABB::generateFromVertices(pyramidVertices, 8);
-    pyramidMesh->setLocalBounds(bounds.min, bounds.max);
+MeshData GeometryGenerator::generateCube() {
+    MeshData data;
 
-    std::shared_ptr<Model> pyramidModel = std::make_shared<Model>();
-    pyramidModel->addMesh(pyramidMesh);
+    data.indices = {
+        // Front
+        0, 1, 2,
+        2, 1, 3,
+        // Right
+        2, 3, 5,
+        5, 3, 7,
+        // Back
+        5, 7, 4,
+        4, 7, 6,
+        // Left
+        4, 6, 0,
+        0, 6, 1,
+        // Top
+        4, 0, 5,
+        5, 0, 2,
+        // Bottom
+        1, 6, 3,
+        3, 6, 7
+    };
 
-    return pyramidModel;
+    data.vertices = {
+        -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+
+        -1.0f, 1.0f, 1.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+    };
+
+    return data;
 }

@@ -13,6 +13,19 @@
 #include "ResourceManager.h"
 
 
+std::shared_ptr<Model> createModelFromData(const MeshData& data, int vertexStride = 8) {
+    auto mesh = std::make_shared<OpenGLMesh>();
+    mesh->createMesh(data.vertices.data(), data.indices.data(), data.vertices.size(), data.indices.size());
+
+    AABB bounds = AABB::generateFromVertices(data.vertices, vertexStride);
+    mesh->setLocalBounds(bounds.min, bounds.max);
+
+    auto model = std::make_shared<Model>();
+    model->addMesh(mesh);
+
+    return model;
+}
+
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     OpenGLRenderer::configureContext();
@@ -51,7 +64,7 @@ int main(int argc, char* argv[]) {
     scene.entities.push_back(knightObject);
 
     Entity pyramidObject;
-    auto pyramidModel = GeometryGenerator::generatePyramid();
+    auto pyramidModel = createModelFromData(GeometryGenerator::generatePyramid());
     pyramidObject.renderData.model = pyramidModel;
     pyramidObject.physicsData.localAABB = pyramidModel->getFullModelAABB();
     pyramidObject.renderData.material = std::make_shared<Material>(brickMaterial);
@@ -59,7 +72,8 @@ int main(int argc, char* argv[]) {
     scene.entities.push_back(pyramidObject);
 
     Entity floorObject;
-    floorObject.renderData.model = GeometryGenerator::generatePlane();
+    auto floorModel = createModelFromData(GeometryGenerator::generatePlane());
+    floorObject.renderData.model = floorModel;
     floorObject.physicsData.localAABB = floorObject.renderData.model->getFullModelAABB();
     floorObject.renderData.material = std::make_shared<Material>(concreteMaterial);
     floorObject.transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f));

@@ -1,5 +1,6 @@
 #include "Skybox.h"
 
+#include "GeometryGenerator.h"
 #include "stb_image.h"
 
 
@@ -12,41 +13,11 @@ Skybox::Skybox(std::vector<std::string> faceLocations, std::shared_ptr<OpenGLSha
     : skyboxMesh(nullptr), skyboxShader(shader), uniformProjection(0), uniformView(0) {
 
     // Mesh Setup
-    unsigned int skyboxIndices[] = {
-        // Front
-        0, 1, 2,
-        2, 1, 3,
-        // Right
-        2, 3, 5,
-        5, 3, 7,
-        // Back
-        5, 7, 4,
-        4, 7, 6,
-        // Left
-        4, 6, 0,
-        0, 6, 1,
-        // Top
-        4, 0, 5,
-        5, 0, 2,
-        // Bottom
-        1, 6, 3,
-        3, 6, 7
-    };
-
-    float skyboxVertices[] = {
-        -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-
-        -1.0f, 1.0f, 1.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
-    };
+    MeshData cubeData = GeometryGenerator::generateCube();
 
     skyboxMesh = std::make_unique<OpenGLMesh>();
-    skyboxMesh->createMesh(skyboxVertices, skyboxIndices, 64, 36);
+    skyboxMesh->createMesh(cubeData.vertices.data(), cubeData.indices.data(), cubeData.vertices.size(), cubeData.indices.size());
+
 
     // OpenGLShader Setup
     // uniformProjection = skyboxShader->getProjectLocation();

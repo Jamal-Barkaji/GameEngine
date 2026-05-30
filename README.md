@@ -50,4 +50,4 @@ Multithreading
 
 ## Build Instructions
 
-This project uses CMake, and requires SDL2, GLAD, glm, and Assimp installed
+This project uses CMake, and requires SDL2, GLAD, glm, and Assimp to be installed

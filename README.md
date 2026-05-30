@@ -1,31 +1,53 @@
-# Custom Game Engine
-This is my final year project for my Computer Science BSc. I intend to continue developing this as a passion project after finishing the course
-The game engine is being developed using OpenGL 
+# Custom C++ 3D Game Engine
 
-# Project Goals
-To develop the foundations of a solid custom game engine with extensible and replaceable code (e.g., a modular graphics backend allows OpenGL to be easily replaced with Vulkan if needed)
+A custom-built, 3D game engine developed from scratch in C++. Originally conceived as my Computer Science BSc final-year project, it has evolved into a dedicated passion project focused on clean software architecture, modern C++ paradigms, and scalable engine systems.
+Design Philosophy & Architecture
 
-# Features
-## Prototyped
-- Vertex and Fragment shaders
-- Input handling, specifically camera control
-- Texture mapping
-- Directional lights
-- Ambient lighting
-- Diffuse lighting
-- Specular lighting
-- Point lights
+## Core Focus: modularity and system decoupling.
 
-## Next steps
-- Finish prototyping spotlights
-- Prototype model importing
-- Agile refactoring: clean up code, encapsulation, adding interfaces, etc
+API-Agnostic Rendering Interface: The rendering pipeline is built on an IRenderer interface. The current OpenGLRenderer can be cleanly swapped out for a Vulkan or Metal backend without rewriting the core game loop or scene logic.
 
-## Planned Features 
-- Basic collision detection
-- Skybox rendering
-- Shadowmapping
-- Simple sound system
-- In-engine logging and debugging tools
-- Multithreading
-- UI
+Resource Factory Pattern: Asset loading (Models, Textures, Shaders, Cubemaps) is handled via a ResourceManager and ResourceFactory, ensuring that Scene objects remain pure data containers unaware of the underlying file I/O or graphics API.
+
+Modern C++: Extensive use of std::shared_ptr and std::unique_ptr for strict ownership semantics, memory safety, and RAII principles.
+
+## Current Features
+### Graphics & Rendering
+
+Forward Rendering Pipeline built on OpenGL 3.3+ (Core Profile).
+
+Advanced Lighting Model: Support for Ambient, Diffuse, and Specular calculations.
+
+Dynamic Lights: Full implementation of Directional lights, Point lights, and Spotlights.
+
+Model Importing: Integration with external mesh data for complex 3D object loading via Assimp.
+
+Environment Rendering: Hardware-accelerated Skybox rendering via Cubemaps.
+
+Material System: Configurable material properties (Albedo mapping, Shininess) per entity.
+
+### Engine Systems
+
+Matrix-based spatial transformations (Translation, Rotation, Scale).
+
+Input Handling: Smooth, decoupled camera control systems (First-person/Free-look).
+
+Basic AABB collision detection and continuous physics stepping.
+
+## Planned Features
+
+Shadow Mapping: Directional shadowmap pass is currently in development.
+
+PBR Materials: Physically Based Rendering support for more realistic surface interactions.
+
+More complex Havok physics integration for rigid body dynamics and collision response.
+
+Audio Backend: A simple, decoupled sound system interface.
+
+Engine Tooling: In-engine debugging UI and custom logging systems.
+
+Multithreading
+
+## Build Instructions
+
+This project uses CMake, and requires SDL2, GLAD, glm, and Assimp installed

@@ -1,5 +1,3 @@
-#include <filesystem>
-
 #include "Entity.h"
 #include "GeometryGenerator.h"
 #include "Window.h"

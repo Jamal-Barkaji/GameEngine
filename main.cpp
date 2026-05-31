@@ -15,7 +15,7 @@
 
 std::shared_ptr<Model> createModelFromData(const MeshData& data, int vertexStride = 8) {
     auto mesh = std::make_shared<OpenGLMesh>();
-    mesh->createMesh(data.vertices.data(), data.indices.data(), data.vertices.size(), data.indices.size());
+    mesh->initMesh(data.vertices.data(), data.indices.data(), data.vertices.size(), data.indices.size());
 
     AABB bounds = AABB::generateFromVertices(data.vertices, vertexStride);
     mesh->setLocalBounds(bounds.min, bounds.max);
@@ -39,8 +39,8 @@ int main(int argc, char* argv[]) {
     std::unique_ptr<OpenGLResourceFactory> resourceFactory;
     ResourceManager resourceManager(std::make_unique<OpenGLResourceFactory>());
 
-    std::shared_ptr<OpenGLShader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
-    std::shared_ptr<OpenGLShader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
+    std::shared_ptr<IShader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
+    std::shared_ptr<IShader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
 
     Scene scene;
 
@@ -109,16 +109,26 @@ int main(int argc, char* argv[]) {
     // s1.setFlash(lowerLight, camera.getCameraDirection());
     scene.spotLights.push_back(s1);
 
-    std::shared_ptr<OpenGLShader> skyboxShader = resourceManager.loadShader("Shaders/skybox.vert", "Shaders/skybox.frag");
-    std::vector<std::string> skyboxFaces;
-    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_rt.tga");
-    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_lf.tga");
-    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_up.tga");
-    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_dn.tga");
-    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_bk.tga");
-    skyboxFaces.push_back("Assets/Textures/Skyboxes/cupertin-lake_ft.tga");
+    // 1. Load Shader
+    std::shared_ptr<IShader> skyboxShader = resourceManager.loadShader("Shaders/skybox.vert", "Shaders/skybox.frag");
 
-    scene.skybox = std::make_shared<Skybox>(skyboxFaces, skyboxShader);
+    // 2. Load Texture
+    std::vector<std::string> skyboxFaces = {
+        "Assets/Textures/Skyboxes/cupertin-lake_rt.tga",
+        "Assets/Textures/Skyboxes/cupertin-lake_lf.tga",
+        "Assets/Textures/Skyboxes/cupertin-lake_up.tga",
+        "Assets/Textures/Skyboxes/cupertin-lake_dn.tga",
+        "Assets/Textures/Skyboxes/cupertin-lake_bk.tga",
+        "Assets/Textures/Skyboxes/cupertin-lake_ft.tga"
+    };
+    auto skyboxTexture = resourceManager.loadCubeMap(skyboxFaces);
+
+    MeshData cubeData = GeometryGenerator::generateCube();
+    auto skyboxMesh = resourceManager.requestMeshContainer();
+    skyboxMesh->initMesh(cubeData.vertices.data(), cubeData.indices.data(),
+                           cubeData.vertices.size(), cubeData.indices.size());
+
+    scene.skybox = std::make_shared<Skybox>(skyboxMesh, skyboxTexture, skyboxShader);
 
     PhysicsSystem physics;
 

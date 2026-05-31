@@ -87,8 +87,8 @@ void Model::loadMesh(aiMesh* mesh, const aiScene* scene, ResourceManager& resour
         }
     }
 
-    auto newMesh = resources.createMesh();
-    newMesh->createMesh(vertexData.data(), indices.data(), vertexData.size(), indices.size());
+    auto newMesh = resources.requestMeshContainer();
+    newMesh->initMesh(vertexData.data(), indices.data(), vertexData.size(), indices.size());
 
     AABB bounds = AABB::generateFromVertices(vertexData, 8);
     newMesh->setLocalBounds(bounds.min, bounds.max);

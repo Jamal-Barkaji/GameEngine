@@ -12,7 +12,7 @@ OpenGLMesh::~OpenGLMesh() {
     OpenGLMesh::clearMesh();
 }
 
-void OpenGLMesh::createMesh(const float* vertices, const unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices) {
+void OpenGLMesh::initMesh(const float* vertices, const unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices) {
     indexCount = numOfIndices;
 
     glGenVertexArrays(1, &VAO);

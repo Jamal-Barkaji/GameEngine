@@ -1,6 +1,4 @@
 #include "ResourceManager.h"
-#include "OpenGLTexture.h"
-#include "OpenGLShader.h"
 #include "Model.h"
 
 #include <iostream>
@@ -9,14 +7,14 @@
 ResourceManager::ResourceManager(std::unique_ptr<IResourceFactory> rf) : resourceFactory(std::move(rf)) {}
 
 
-std::shared_ptr<IMesh> ResourceManager::createMesh() {
-    return resourceFactory->createMesh();
+std::shared_ptr<IMesh> ResourceManager::requestMeshContainer() {
+    return resourceFactory->instantiateMesh();
 }
 
 std::shared_ptr<ITexture> ResourceManager::loadTexture(const std::string& path) {
     if (textures.count(path)) return textures[path];
 
-    auto tex = resourceFactory->createTexture(path);
+    auto tex = resourceFactory->instantiateTexture(path);
     if (!tex->loadTexture()) {
         std::cerr << "Failed to load texture: " << path << "\n";
 
@@ -30,13 +28,17 @@ std::shared_ptr<ITexture> ResourceManager::loadTexture(const std::string& path) 
 
 std::shared_ptr<ITexture> ResourceManager::getDebugTexture() {
     if (!debugTexture) {
-        debugTexture = resourceFactory->createTexture("Assets/Textures/debugTexture.png");
+        debugTexture = resourceFactory->instantiateTexture("Assets/Textures/debugTexture.png");
         debugTexture->loadTexture();
     }
     return debugTexture;
 }
 
-std::shared_ptr<OpenGLShader> ResourceManager::loadShader(const std::string& vert, const std::string& frag) {
+std::shared_ptr<ICubeMap> ResourceManager::loadCubeMap(const std::vector<std::string>& faceLocations) {
+    return resourceFactory->instantiateCubeMap(faceLocations);
+}
+
+std::shared_ptr<IShader> ResourceManager::loadShader(const std::string& vert, const std::string& frag) {
     std::string key = vert + "+" + frag;
     if (shaders.count(key)) return shaders[key];
 

@@ -21,6 +21,9 @@ set(SHADER_FILES
     Shaders/skybox.vert
     Shaders/directional_shadow_map.frag
     Shaders/directional_shadow_map.vert
+        include/OpenGLCubeMap.h
+        src/OpenGLCubeMap.cpp
+        include/ICubeMap.h
 )
 
 # --- Executable ---

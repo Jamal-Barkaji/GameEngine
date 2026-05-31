@@ -11,7 +11,7 @@ class OpenGLMesh : public BaseMesh {
         OpenGLMesh();
         ~OpenGLMesh() override;
 
-        void createMesh(const float* vertices, const unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices) override;
+        void initMesh(const float* vertices, const unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices) override;
         void drawMesh() override;
         void clearMesh() override;
 

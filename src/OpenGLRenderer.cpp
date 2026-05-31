@@ -66,7 +66,9 @@ void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
          glm::mat4 skyView = camera.calculateViewMatrix();
          skyView = glm::mat4(glm::mat3(skyView));
 
+         glDepthMask(GL_FALSE);
          scene.skybox->drawSkybox(skyView, camera.getProjection());
+         glDepthMask(GL_TRUE);
      }
 
     shader.bindShader();

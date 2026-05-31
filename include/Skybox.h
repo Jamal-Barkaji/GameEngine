@@ -1,32 +1,23 @@
 #pragma once
 
-#include <vector>
-#include <string>
-
+#include <memory>
 #include <glm/glm.hpp>
-#include "glm/gtc/type_ptr.hpp"
 
-#include "OpenGLTexture.h"
-#include "OpenGLMesh.h"
-#include "OpenGLShader.h"
 
+class IMesh;
+class IShader;
+class ICubeMap;
 
 class Skybox {
 public:
-    Skybox();
-    Skybox(std::vector<std::string> faceLocations, std::shared_ptr<OpenGLShader> shader);
-
-    ~Skybox();
+    Skybox(std::shared_ptr<IMesh> mesh,
+           std::shared_ptr<ICubeMap> texture,
+           std::shared_ptr<IShader> shader);
 
     void drawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
-    unsigned int getProjectionMatrix();
-    unsigned int getViewMatrix();
-
 private:
-    std::unique_ptr<OpenGLMesh> skyboxMesh;
-    std::shared_ptr<OpenGLShader> skyboxShader;
-
-    unsigned int skyboxTextureID;
-    unsigned int uniformProjection, uniformView;
+    std::shared_ptr<IMesh> skyboxMesh;
+    std::shared_ptr<ICubeMap> skyboxTexture;
+    std::shared_ptr<IShader> skyboxShader;
 };

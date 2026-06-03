@@ -24,7 +24,7 @@ bool OpenGLShadowMap::init(GLuint width, GLuint height) {
 
     glGenTextures(1, &shadowMap);
     glBindTexture(GL_TEXTURE_2D, shadowMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
                  nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -32,6 +32,7 @@ bool OpenGLShadowMap::init(GLuint width, GLuint height) {
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColour);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
@@ -42,7 +43,13 @@ bool OpenGLShadowMap::init(GLuint width, GLuint height) {
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
     if (status != GL_FRAMEBUFFER_COMPLETE) {
-        std::cerr << "Framebuffer Error:" << status << std::endl;
+        std::cerr << "Framebuffer Error: " << status << std::endl;
+        std::cerr << "GL_FRAMEBUFFER_COMPLETE = " << GL_FRAMEBUFFER_COMPLETE << std::endl;
+        if (status == GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT) {
+            std::cerr << "Reason: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT" << std::endl;
+        } else if (status == GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT) {
+            std::cerr << "Reason: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT" << std::endl;
+        }
         return false;
     }
 

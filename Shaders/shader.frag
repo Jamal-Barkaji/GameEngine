@@ -39,7 +39,6 @@ struct SpotLight {
 struct Material {
     float specularIntensity;
     float shininess;
-    float albedoMap;
 };
 
 uniform int pointLightCount;
@@ -57,30 +56,34 @@ uniform Material material;
 uniform vec3 eyePosition;
 
 float calcDirectionalShadowFactor (DirectionalLight light) {
-vec3 projCoords = directionalLightSpacePos.xyz / directionalLightSpacePos.w;
+    vec3 projCoords = directionalLightSpacePos.xyz / directionalLightSpacePos.w;
     projCoords = projCoords * 0.5 + 0.5;
+
+    if (projCoords.x < 0.0 || projCoords.x > 1.0 ||
+        projCoords.y < 0.0 || projCoords.y > 1.0 ||
+        projCoords.z < 0.0 || projCoords.z > 1.0) {
+        return 0.0;
+    }
 
     float currentDepth = projCoords.z;
 
-    vec3 pointNormal = normalize(normal);
+    vec3 normalDir = normalize(normal);
     vec3 lightDir = normalize(light.direction);
-    float bias = max(0.05 * (1.0 - dot(pointNormal, lightDir)), 0.005);
+    float cosTheta = max(abs(dot(normalDir, lightDir)), 0.0);
+    float bias = max(0.001 * (1.0 - cosTheta), 0.0005);
 
     float shadow = 0.0;
-
     vec2 texelSize = 1.0 / textureSize(directionalShadowMap, 0);
-    for(int x = -1; x <= 1; x++) {
-        for(int y = -1; y <= 1; y++) {
+    int sampleCount = 0;
+
+    for (int x = -1; x <= 1; ++x) {
+        for (int y = -1; y <= 1; ++y) {
             float pcfDepth = texture(directionalShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            shadow += (currentDepth - bias > pcfDepth) ? 1.0 : 0.0;
+            sampleCount++;
         }
     }
-
-    shadow /= 9.0;
-
-    if (projCoords.z > 1.0) {
-        shadow = 0.0;
-    }
+    shadow /= float(sampleCount);
 
     return shadow;
 }
@@ -104,7 +107,7 @@ vec4 calcLightByDirection(Light light, vec3 direction, float shadowFactor) {
         }
     }
 
-    return (ambientColour + (1 - shadowFactor) * (diffuseColour + specularColour));
+    return (ambientColour + (1.0 - shadowFactor) * (diffuseColour + specularColour));
 }
 
 vec4 calcDirectionalLight() {
@@ -163,4 +166,3 @@ vec4 calcSpotLights() {
 
         colour = texture(theTexture, texCoord) * finalColour;
     }
-    

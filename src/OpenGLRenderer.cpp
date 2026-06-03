@@ -47,9 +47,14 @@ void OpenGLRenderer::swapBuffers() {
 }
 
 void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) {
-    // if (!scene.directionalLight.empty()) {
-    //     directionalShadowMapPass(scene, shadowShader);
-    // }
+    // Setup default viewport for the window
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    glViewport(0, 0, windowWidth, windowHeight);
+
+    if (!scene.directionalLight.empty()) {
+        directionalShadowMapPass(scene, shadowShader);
+    }
     renderPass(scene, mainShader, camera);
 
     swapBuffers();
@@ -86,8 +91,8 @@ void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
 
         shader.setMat4("directionalLightTransform", mainLight->calculateLightTransform());
 
-        // mainLight->getShadowMap()->read(GL_TEXTURE1);
-        // shader.setInt("directionalShadowMap", 1);
+        mainLight->getShadowMap()->read(GL_TEXTURE1);
+        shader.setInt("directionalShadowMap", 1);
     }
     if (!scene.pointLights.empty()) {
         int pointLightCount = static_cast<int>(scene.pointLights.size());
@@ -126,31 +131,50 @@ void OpenGLRenderer::renderPass(Scene& scene, IShader& shader, Camera& camera) {
 }
 
 void OpenGLRenderer::directionalShadowMapPass(Scene& scene, IShader& shadowShader) {
-    // DirectionalLight* light = &scene.directionalLight[0];
-    //
-    // // Bind the specific framebuffer for shadows (off-screen rendering)
-    // light->getShadowMap()->write();
-    //
-    // glEnable(GL_DEPTH_TEST);
-    // glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
-    //
-    // // Clear DEPTH only
-    // glClear(GL_DEPTH_BUFFER_BIT);
-    //
-    // shadowShader.useShader();
-    //
-    // // Calculate Light Matrix (Ortho projection looking down the light dir)
-    // glm::mat4 lightTransform = light->calculateLightTransform();
-    // shadowShader.setDirectionalLightTransform(&lightTransform);
-    //
-    // // Render Scene Depth from Light's POV
-    // for (const auto& obj : scene.entities) {
-    //     glUniformMatrix4fv(shadowShader.getModelLocation(), 1, GL_FALSE, glm::value_ptr(obj.transform));
-    //
-    //     if (obj.renderData.model) {
-    //         obj.renderData.model->renderModel();
-    //     }
-    // }
-    //
-    // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DirectionalLight* light = &scene.directionalLight[0];
+
+    // Save current OpenGL state
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    light->getShadowMap()->write();
+
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1.25f, 4.0f);
+
+    glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
+
+    glClearDepth(1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    shadowShader.bindShader();
+
+    glm::mat4 lightTransform = light->calculateLightTransform();
+    shadowShader.setMat4("directionalLightTransform", lightTransform);
+
+    for (const auto& obj : scene.entities) {
+        shadowShader.setMat4("model", obj.transform);
+
+        if (obj.renderData.model) {
+            obj.renderData.model->renderModel(shadowShader);
+        }
+    }
+
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(0.0f, 0.0f);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDrawBuffer(GL_BACK);
+    glReadBuffer(GL_BACK);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+    glUseProgram(0);
 }

@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     floorObject.transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     scene.entities.push_back(floorObject);
 
-    DirectionalLight directionalMainLight = DirectionalLight(2048, 2048,
+    DirectionalLight directionalMainLight = DirectionalLight(4096, 4096,
                                                             1.0f, 0.53f, 0.3f,
                                                             0.2f, 0.9f,
                                                             -10.0f, -12.0f, 18.0f);

@@ -49,7 +49,7 @@ void OpenGLRenderer::swapBuffers() {
 void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) {
     // Setup default viewport for the window
     int windowWidth, windowHeight;
-    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    SDL_GL_GetDrawableSize(window, &windowWidth, &windowHeight);
     glViewport(0, 0, windowWidth, windowHeight);
 
     if (!scene.directionalLight.empty()) {

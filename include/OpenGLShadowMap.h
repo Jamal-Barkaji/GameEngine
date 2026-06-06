@@ -12,16 +12,16 @@ public:
     ~OpenGLShadowMap() override;
 
 
-    bool init(GLuint width, GLuint height) override;
+    virtual bool init(GLuint width, GLuint height) override;
 
-    void write() override;
+    virtual void write() override;
 
-    void read(GLenum textureUnit) override;
+    virtual void read(GLenum textureUnit) override;
 
     GLuint getShadowWidth() override;
     GLuint getShadowHeight() override;
 
-private:
+protected:
     GLuint FBO, shadowMap;
     GLuint shadowWidth, shadowHeight;
 };

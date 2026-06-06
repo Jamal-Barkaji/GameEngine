@@ -87,6 +87,12 @@ add_executable(GameEngine
     include/IShadowMap.h
     include/BaseMesh.h
     src/BaseMesh.cpp
+    include/OpenGLOmniShadowMap.h
+    src/OpenGLOmniShadowMap.cpp
+    Shaders/omni_shadow_map.vert
+    Shaders/omni_shadow_map.frag
+    Shaders/omni_shadow_map.geom
+
 )
 
 find_package(glad CONFIG REQUIRED)

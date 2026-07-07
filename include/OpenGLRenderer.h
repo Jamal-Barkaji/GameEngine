@@ -27,10 +27,11 @@ public:
 
     void swapBuffers() override;
 
-    void renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) override;
+    void renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& directionalShadowShader, IShader& omniShadowShader) override;
 
 private:
     void directionalShadowMapPass(Scene& scene, IShader& shadowShader);
+    void omniShadowMapPass(PointLight* light, Scene& scene, IShader& omniShadowShader);
     void renderPass(Scene& scene, IShader& mainShader, Camera& camera);
 
     SDL_Window* window;

@@ -39,6 +39,12 @@ int main(int argc, char* argv[]) {
 
     std::shared_ptr<IShader> mainShader = resourceManager.loadShader("Shaders/shader.vert", "Shaders/shader.frag");
     std::shared_ptr<IShader> directionalShadowShader = resourceManager.loadShader("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
+    //std::shared_ptr<IShader> omniShadowShader = resourceManager.loadShader("Shaders/omni_shadow_map.vert", "Shaders/omni_shadow_map.geom", "Shaders/omni_shadow_map.frag");
+
+    // TEMPORARY DIRECT CALL TO createFromFiles()
+    OpenGLShader omniShadowShader;
+    omniShadowShader.createFromFiles("Shaders/omni_shadow_map.vert", "Shaders/omni_shadow_map.geom", "Shaders/omni_shadow_map.frag");
+
 
     Scene scene;
 
@@ -84,24 +90,30 @@ int main(int argc, char* argv[]) {
 
     scene.directionalLight.push_back(directionalMainLight);
 
-    PointLight p1 = PointLight(0.0f, 1.0f, 0.0f,
-                                0.7f, 0.1f,
-                                -4.0f, 0.0f, 0.0f,
-                                0.2f, 0.2f, 0.1f);
+    PointLight p1 = PointLight(1024, 1024,
+                            0.1f, 100.0f,
+                            0.0f, 1.0f, 0.0f,
+                            0.7f, 0.1f,
+                            -4.0f, 0.0f, 0.0f,
+                            0.2f, 0.2f, 0.1f);
     scene.pointLights.push_back(p1);
 
-    PointLight p2 = PointLight(0.0f, 0.0f, 1.0f,
-                                0.5f, 0.1f,
-                                4.0f, 2.0f, 0.0f,
-                                0.1f, 0.2f, 0.1f);
+    PointLight p2 = PointLight(1024, 1024,
+                            0.1f, 100.0f,
+                            0.0f, 0.0f, 1.0f,
+                            0.5f, 0.1f,
+                            4.0f, 2.0f, 0.0f,
+                            0.1f, 0.2f, 0.1f);
     scene.pointLights.push_back(p2);
 
-    SpotLight s1 = SpotLight(1.0f, 1.0f, 1.0f,
-                                0.2f, 1.0f,
-                                0.0f, 3.0f, 4.0f,
-                                1.0f, 0.0f, 0.0f,
-                                0.0f, -1.0f, 0.0f,
-                                20.0f);
+    SpotLight s1 = SpotLight(1024, 1024,
+                            0.1f, 100.0f,
+                            1.0f, 1.0f, 1.0f,
+                            0.2f, 1.0f,
+                            0.0f, 3.0f, 4.0f,
+                            1.0f, 0.0f, 0.0f,
+                            0.0f, -1.0f, 0.0f,
+                            20.0f);
     // glm::vec3 lowerLight = camera.getCameraPosition();
     // lowerLight.y -= 0.3f;
     // s1.setFlash(lowerLight, camera.getCameraDirection());
@@ -131,6 +143,6 @@ int main(int argc, char* argv[]) {
     PhysicsSystem physics;
 
     Loop loop;
-    loop.run(window, renderer, transformer, camera, scene, *mainShader, *directionalShadowShader, physics);
+    loop.run(window, renderer, transformer, camera, scene, *mainShader, *directionalShadowShader, omniShadowShader, physics);
     return 0;
 }

@@ -50,12 +50,20 @@ public:
     void setMat4(const std::string& name, const glm::mat4& value) override;
     int getUniformLocation(const std::string& name) override;
 
-private:
+    // TEMPORARILY PUBLIC
+// private:
     void createFromString(const char* vertexCode, const char* fragmentCode);
     void createFromFiles(const char* vertexLocation, const char* fragmentLocation);
+    void createFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLocation);
+
 
     void compileShader(const char* vertexCode, const char* fragmentCode);
+    void compileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode);
     void addShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+
+    void compileProgram();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     std::unordered_map<std::string, int> locationCache;
 
@@ -65,7 +73,10 @@ private:
     GLuint shaderID, uniformProjection, uniformView, uniformEyePosition,
         uniformSpecularIntensity, uniformShininess,
         uniformTexture,
-        uniformDirectionalLightTransform, uniformDirectionalShadowMap;
+        uniformDirectionalLightTransform, uniformDirectionalShadowMap,
+        uniformOmniLightPos, uniformFarPlane;
+
+    GLuint uniformLightMatrices[6];
 
     GLint uniformModel;
 

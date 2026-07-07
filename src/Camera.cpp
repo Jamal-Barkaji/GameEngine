@@ -2,7 +2,7 @@
 
 
 Camera::Camera(Window& window, glm::vec3 startPosition, glm::vec3 startUp, float startYaw, float startPitch, float startMoveSpeed, float startTurnSpeed) {
-    fovy = 45.0;
+    fovy = 60.0f;
     aspect = static_cast<float>(window.getScreenWidth())/static_cast<float>(window.getScreenHeight());
     zNear = 0.1f;
     zFar = 100.0f;

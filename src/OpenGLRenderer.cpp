@@ -46,15 +46,25 @@ void OpenGLRenderer::swapBuffers() {
     SDL_GL_SwapWindow(window);
 }
 
-void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) {
+void OpenGLRenderer::renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& directionalShadowShader, IShader& omniShadowShader) {
     // Setup default viewport for the window
     int windowWidth, windowHeight;
     SDL_GL_GetDrawableSize(window, &windowWidth, &windowHeight);
     glViewport(0, 0, windowWidth, windowHeight);
 
     if (!scene.directionalLight.empty()) {
-        directionalShadowMapPass(scene, shadowShader);
+        directionalShadowMapPass(scene, directionalShadowShader);
     }
+
+    if (!scene.pointLights.empty()) {
+        for (auto& light : scene.pointLights) {
+            // Only perform shadow pass if this point light has an initialized shadow map
+            if (light.getShadowMap()) {
+                omniShadowMapPass(&light, scene, omniShadowShader);
+            }
+        }
+    }
+
     renderPass(scene, mainShader, camera);
 
     swapBuffers();
@@ -175,6 +185,58 @@ void OpenGLRenderer::directionalShadowMapPass(Scene& scene, IShader& shadowShade
 
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
+    glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+    glUseProgram(0);
+}
+
+void OpenGLRenderer::omniShadowMapPass(PointLight* light, Scene& scene, IShader& omniShadowShader) {
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    // Bind Point Light's Cubemap Framebuffer for writing
+    light->getShadowMap()->write();
+
+    // Disable writing to color buffers
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+
+    // Use a high-quality resolution-matched viewport
+    glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    omniShadowShader.bindShader();
+
+    // Set uniform states abstractly
+    omniShadowShader.setVec3("lightPos", light->getPosition());
+    omniShadowShader.setFloat("farPlane", light->getFarPlane());
+
+    // Send the array of 6 look-at projections sequentially to "lightMatrices[i]"
+    std::vector<glm::mat4> lightMatrices = light->calculateLightTransform();
+    for (size_t i = 0; i < 6; ++i) {
+        std::string uniformName = "lightMatrices[" + std::to_string(i) + "]";
+        omniShadowShader.setMat4(uniformName, lightMatrices[i]);
+    }
+
+    // Render Scene to Geometry Shader (which clones to the 6 cube faces)
+    for (const auto& obj : scene.entities) {
+        omniShadowShader.setMat4("model", obj.transform);
+
+        if (obj.renderData.model) {
+            obj.renderData.model->renderModel(omniShadowShader);
+        }
+    }
+
+    // Reset pipeline state
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDrawBuffer(GL_BACK);
+    glReadBuffer(GL_BACK);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    // Restore high-DPI scaled screen viewport safely
     glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
     glUseProgram(0);
 }

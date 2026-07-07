@@ -9,5 +9,5 @@ public:
 
     virtual void swapBuffers() = 0;
 
-    virtual void renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& shadowShader) = 0;
+    virtual void renderFrame(Scene& scene, Camera& camera, IShader& mainShader, IShader& directionalShadowShader, IShader& omniShadowShader) = 0;
 };

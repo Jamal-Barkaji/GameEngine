@@ -6,7 +6,7 @@ DirectionalLight::DirectionalLight() : Light() {
     lightProj = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 150.0f);
 }
 
-DirectionalLight::DirectionalLight(float shadowWidth, float shadowHeight,
+DirectionalLight::DirectionalLight(unsigned int shadowWidth, unsigned int shadowHeight,
                                     float red, float green, float blue,
                                     float aIntensity, float dIntensity,
                                     float xDir, float yDir, float zDir) : Light(shadowWidth, shadowHeight, red, green, blue, aIntensity, dIntensity) {

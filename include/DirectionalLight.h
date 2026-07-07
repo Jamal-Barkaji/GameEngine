@@ -7,7 +7,7 @@
 class DirectionalLight : public Light {
 public:
     DirectionalLight();
-    DirectionalLight(float shadowWidth, float shadowHeight,
+    DirectionalLight(unsigned int shadowWidth, unsigned int shadowHeight,
                         float red, float green, float blue,
                         float aIntensity, float dIntensity,
                         float xDir, float yDir, float zDir);

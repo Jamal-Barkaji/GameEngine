@@ -47,7 +47,7 @@ bool OpenGLOmniShadowMap::init(GLuint width, GLuint height) {
 }
 
 void OpenGLOmniShadowMap::write() {
-    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
 }
 
 void OpenGLOmniShadowMap::read(GLenum textureUnit) {
